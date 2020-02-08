@@ -1,53 +1,63 @@
 package com.scsse.workflow.entity.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-import lombok.ToString;
-
-import javax.persistence.*;
 import java.util.HashSet;
 import java.util.Set;
 
-/**
- * @author Alfred Fu
- * Created on 2019/9/25 9:30 上午
- */
+import javax.persistence.*;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@Getter
-@Setter
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
 @ToString
 @Entity
 @NoArgsConstructor
 @Table(name = "team")
+//@JsonIgnoreProperties({ "handler","hibernateLazyInitializer"})
 public class Team {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer teamId;
+    private Integer id;
 
+    /**
+     * 团队名称
+     */
     @Column
-    private String teamName;
+    private String name;
 
-    @OneToOne
-    @JoinColumn(name = "graph_id")
-    private Graph graph;
+//    @OneToOne
+//    @JoinColumn(name = "graph_id")
+//    private Graph graph;
+   
+    /**
+     * 队长id
+     */
+    @ManyToOne
+    @JoinColumn(name = "leader_id")
+    private User leader;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
-    private User manager;
-
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
+    
     @ManyToMany
     @JoinTable(
-            name = "team_member",
+            name = "team_user",
             joinColumns = @JoinColumn(name = "team_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @JsonBackReference(value = "team.members")
     private Set<User> members = new HashSet<>();
-
+  
     @OneToMany(mappedBy = "team")
-    @JsonBackReference(value = "team.recruitSet")
+    @JsonBackReference(value = "team.recruits")
     private Set<Recruit> recruits = new HashSet<>();
+    
+    @Column(name = "enroll_id")
+    private String enroll_id;
+    
 }

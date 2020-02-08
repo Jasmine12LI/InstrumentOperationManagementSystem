@@ -1,46 +1,57 @@
 package com.scsse.workflow.entity.model;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.persistence.*;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
 
-import javax.persistence.*;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-/**
- * 记录一个组内的计划
- *
- * @author Alfred Fu
- * Created on 2019/9/25 10:56 上午
- */
-@Getter
-@Setter
+@Data
 @ToString
 @Entity
 @NoArgsConstructor
+@Table(name = "action_record")
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer"})
 public class ActionRecord {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column
-    private Integer actTimeRecordId;
+	@Column
+    private Integer id;
 
-    @Column(length = 800)
+    /**
+     * 工作进展
+     */
+	@Column
     private String content;
 
-    @Column
+    /**
+     * 创建时间
+     */
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @Column(name = "create_time")
     private Date createTime = new Date();
 
-    @ManyToOne
-    @JoinColumn(name = "userId")
-    private User triggerUser;
-
-    @ManyToOne
-    @JoinColumn(name = "teamId")
+    /**
+     * 团队id
+     */
+	@ManyToOne
+	@JoinColumn(name="team_id")
     private Team team;
 
+    /**
+     * 创建该条工作流的用户id
+     */
+	@ManyToOne
+	@JoinColumn(name="creator_id")
+    private User creator;
+	
 
     /**
      * 根据Task生成ActionRecord {完成}
@@ -50,21 +61,21 @@ public class ActionRecord {
      * @param task 状态为完成的task
      * @return ActionRecord
      */
-    public static ActionRecord generateTaskFinishedRecord(User user, Team team, Vector task) {
-        final String SPLITTER = " ";
-        final String SUCCESS_STATUS = "成功";
-
-        ActionRecord actionRecord = new ActionRecord();
-        actionRecord.setTriggerUser(user);
-        actionRecord.setTeam(team);
-        actionRecord.setContent(
-                new SimpleDateFormat("hh:mm").format(new Date()) + SPLITTER +
-                        user.getUsername() + SPLITTER +
-                        task.getVectorName() + SPLITTER +
-                        SUCCESS_STATUS
-        );
-
-        return actionRecord;
-    }
+//    public static ActionRecord generateTaskFinishedRecord(User user, Team team, Vector task) {
+//        final String SPLITTER = " ";
+//        final String SUCCESS_STATUS = "成功";
+//        
+//        ActionRecord actionRecord = new ActionRecord();
+//        actionRecord.setCreator(user);
+//        actionRecord.setTeam(team);
+//        actionRecord.setContent(
+//                new SimpleDateFormat("hh:mm").format(new Date()) + SPLITTER +
+//                        user.getName() + SPLITTER +
+//                        task.getVectorName() + SPLITTER +
+//                        SUCCESS_STATUS
+//        );
+//
+//        return actionRecord;
+//    }
 
 }

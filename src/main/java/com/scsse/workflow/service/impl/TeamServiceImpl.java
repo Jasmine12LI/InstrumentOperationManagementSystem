@@ -3,8 +3,6 @@ package com.scsse.workflow.service.impl;
 import com.scsse.workflow.constant.ErrorMessage;
 import com.scsse.workflow.entity.dto.TeamDto;
 import com.scsse.workflow.entity.dto.UserDto;
-import com.scsse.workflow.entity.model.Team;
-import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.TeamRepository;
 import com.scsse.workflow.service.TeamService;

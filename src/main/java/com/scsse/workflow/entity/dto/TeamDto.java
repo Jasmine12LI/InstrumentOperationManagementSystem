@@ -1,6 +1,5 @@
 package com.scsse.workflow.entity.dto;
 
-import com.scsse.workflow.entity.model.Team;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -12,6 +11,6 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class TeamDto extends Team {
+public class TeamDto {
     private String teamName;
 }

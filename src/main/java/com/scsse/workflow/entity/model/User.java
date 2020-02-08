@@ -1,67 +1,114 @@
 package com.scsse.workflow.entity.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import lombok.*;
-
-import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Objects;
 import java.util.Set;
 
-/**
- * @author Alfred Fu
- * Created on 2019-01-27 10:42
- */
+import javax.persistence.*;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.imooc.pojo.Access;
 
-@Getter
-@Setter
-@ToString(exclude = {"followRecruits", "successRecruits", "applyRecruits", "followUser"})
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
+
+@Data
+@ToString
 @Entity
 @NoArgsConstructor
-@AllArgsConstructor
 @Table(name = "user")
+@JsonIgnoreProperties({ "handler","hibernateLazyInitializer"})
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column
-    private Integer userId;
+    private Integer id;
+
+    /**
+     * 用户名
+     */
     @Column
-    private Integer gender;
+    private String name;
     @Column
-    private String username;
+    private String password;
     @Column
-    private String userNumber;
+    private String salt;
+
+    /**
+     * 头像
+     */
+    @Column(name = "face_image")
+    private String faceImage;
+  
+    @Column
+    private String email;
+
+    /**
+     * 添加时间
+     */
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @Column(name = "add_time")
+    private Date addTime;
+
+    /**
+     * 最后登录时间
+     */
+	@JsonFormat( pattern="yyyy-MM-dd HH:mm", timezone = "GMT+8")
+    @Column(name = "last_login_date")
+    private Date lastLoginDate;
+
+    /**
+     * 所属学院
+     */
     @Column
     private String college;
+
+    /**
+     * 性别
+     */
     @Column
-    private String userGrade;
+    private Boolean gender;
+
+    @Column(name = "open_id")
+    private String openId;
+
+    /**
+     * 年级
+     */
     @Column
-    private String userPhone;
+    private String grade;
+
+    /**
+     * 学号
+     */
+    @Column(name = "stu_number")
+    private String stuNumber;
+
+    /**
+     * 电话号码
+     */
     @Column
-    private String userEmail;
+    private String phone;
+
+    /**
+     * 用户简历（图片）
+     */
     @Column
+    private String resume;
+
+    /**
+     * 特长
+     */
+    @Column
+    private String specialty;
+
+    @Column(name = "wx_id")
     private String wxId;
-    @Column
-    private String userSpecialty;
-    @Column
-    private String userResume;
-    @Column
-    private String openid;
-
-    @ManyToMany
-    @JsonBackReference(value = "user.followUsers")
-    @JoinTable(name = "user_follower",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "follower_id"))
-    private Set<User> followUser = new HashSet<>();
-
-    @ManyToMany
-    @JsonBackReference(value = "user.followActivities")
-    @JoinTable(name = "user_activity",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "activity_id"))
-    private Set<Activity> followActivities = new HashSet<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
     @JsonBackReference(value = "user.userTags")
@@ -70,6 +117,47 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> userTags = new HashSet<>();
 
+    @ManyToMany
+	@JsonBackReference(value = "user.roles")
+	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+	private Set<Role> roles = new HashSet<>();
+    
+    @ManyToMany
+    @JsonBackReference(value = "user.topics")
+    @JoinTable(name = "topic_liker",joinColumns = @JoinColumn(name = "liker_id"),inverseJoinColumns = @JoinColumn(name = "topic_id"))
+    private Set<Topic> topics = new HashSet<>();
+    
+    @ManyToMany
+    @JsonBackReference(value = "user.replys")
+    @JoinTable(name = "reply_liker",joinColumns = @JoinColumn(name = "liker_id"),inverseJoinColumns = @JoinColumn(name = "reply_id"))
+    private Set<Reply> replys = new HashSet<>();
+    
+    
+    @ManyToMany(mappedBy = "members")
+    @JsonBackReference(value = "user.joinedTeam")
+    private Set<Team> joinedTeam = new HashSet<>();
+    
+    @ManyToMany
+    @JsonBackReference(value = "user.joinActivities")
+    @JoinTable(name = "user_activity",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    private Set<Activity> joinActivities = new HashSet<>();
+    
+    @ManyToMany
+    @JsonBackReference(value = "user.followUsers")
+    @JoinTable(name = "user_follower",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "follower_id"))
+    private Set<User> followUsers = new HashSet<>();
+    
+    @ManyToMany
+    @JsonBackReference(value = "user.followActivities")
+    @JoinTable(name = "user_activity_follower",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "activity_id"))
+    private Set<Activity> followActivities = new HashSet<>();
+    
     @ManyToMany
     @JsonBackReference(value = "user.followRecruits")
     @JoinTable(name = "user_recruit_follower",
@@ -83,22 +171,15 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recruit_id"))
     private Set<Recruit> applyRecruits = new HashSet<>();
-
-    @ManyToMany(mappedBy = "members")
-    @JsonBackReference(value = "user.successRecruits")
-    private Set<Recruit> successRecruits = new HashSet<>();
-
-    @ManyToMany(mappedBy = "members")
-    @JsonBackReference(value = "user.joinedTeam")
-    private Set<Team> joinedTeam = new HashSet<>();
-
+    
+    
     public User(String username, String openid) {
-        this.username = username;
-        this.openid = openid;
+        this.name = username;
+        this.openId = openid;
     }
-
+    
     public User(String openid) {
-        this.openid = openid;
+        this.openId = openid;
     }
 
     @Override
@@ -106,19 +187,20 @@ public class User {
         if (this == o) return true;
         if (!(o instanceof User)) return false;
         User user = (User) o;
-        return Objects.equals(getUserId(), user.getUserId()) &&
-                Objects.equals(getUsername(), user.getUsername()) &&
-                Objects.equals(getUserNumber(), user.getUserNumber()) &&
-                Objects.equals(getUserGrade(), user.getUserGrade()) &&
-                Objects.equals(getUserPhone(), user.getUserPhone()) &&
-                Objects.equals(getUserEmail(), user.getUserEmail()) &&
-                Objects.equals(getUserSpecialty(), user.getUserSpecialty()) &&
-                Objects.equals(getUserResume(), user.getUserResume()) &&
-                Objects.equals(getOpenid(), user.getOpenid());
+        return Objects.equals(getId(), user.getId()) &&
+                Objects.equals(getName(), user.getName()) &&
+                Objects.equals(getStuNumber(), user.getStuNumber()) &&
+                Objects.equals(getGrade(), user.getGrade()) &&
+                Objects.equals(getPhone(), user.getPhone()) &&
+                Objects.equals(getEmail(), user.getEmail()) &&
+                Objects.equals(getSpecialty(), user.getSpecialty()) &&
+                Objects.equals(getResume(), user.getResume()) &&
+                Objects.equals(getOpenId(), user.getOpenId());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(getUserId(), getUsername(), getUserNumber(), getUserGrade(), getUserPhone(), getUserEmail(), getUserSpecialty(), getUserResume(), getOpenid());
+        return Objects.hash(getId(), getName(), getStuNumber(), getStuNumber(), getPhone(), getEmail(), 
+        		getSpecialty(), getResume(), getOpenId());
     }
 }

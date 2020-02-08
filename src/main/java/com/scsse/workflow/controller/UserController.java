@@ -1,7 +1,6 @@
 package com.scsse.workflow.controller;
 
 import com.scsse.workflow.entity.dto.UserDetailPage;
-import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;

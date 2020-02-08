@@ -1,6 +1,7 @@
 package com.scsse.workflow.entity.model;
-
 import com.fasterxml.jackson.annotation.JsonBackReference;
+
+import lombok.Data;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -15,8 +16,7 @@ import java.util.Set;
  * @author Alfred Fu
  * Created on 2019-01-27 11:24
  */
-@Getter
-@Setter
+@Data
 @ToString(exclude = {"users", "activities", "recruits"})
 @Entity
 @NoArgsConstructor

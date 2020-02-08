@@ -1,7 +1,5 @@
 package com.scsse.workflow.service;
 
-import com.scsse.workflow.entity.model.Vector;
-
 /**
  * @author Alfred Fu
  * Created on 2019-02-21 18:39

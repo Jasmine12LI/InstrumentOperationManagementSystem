@@ -1,9 +1,5 @@
 package com.scsse.workflow;
 
-import com.scsse.workflow.entity.dto.RecruitDto;
-import com.scsse.workflow.entity.model.Activity;
-import com.scsse.workflow.entity.model.Recruit;
-import com.scsse.workflow.entity.model.Tag;
 import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.service.RecruitService;
 import com.scsse.workflow.service.TagService;
@@ -16,8 +12,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import javax.annotation.Resource;
 import javax.transaction.Transactional;
-
-import static org.junit.jupiter.api.Assertions.*;
 
 /**
  * @author Alfred Fu

@@ -1,7 +1,6 @@
 package com.scsse.workflow;
 
 
-import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.service.UserService;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;

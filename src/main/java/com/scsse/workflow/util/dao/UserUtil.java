@@ -1,7 +1,6 @@
 package com.scsse.workflow.util.dao;
 
 import com.scsse.workflow.constant.ErrorMessage;
-import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.UserRepository;
 import com.scsse.workflow.util.mvc.RequestUtil;

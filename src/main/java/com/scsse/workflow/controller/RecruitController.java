@@ -2,7 +2,6 @@ package com.scsse.workflow.controller;
 
 import com.scsse.workflow.constant.PredicateType;
 import com.scsse.workflow.entity.dto.RecruitDto;
-import com.scsse.workflow.entity.model.Recruit;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.service.RecruitService;
 import com.scsse.workflow.service.UserService;

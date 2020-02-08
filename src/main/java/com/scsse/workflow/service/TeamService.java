@@ -2,7 +2,6 @@ package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.TeamDto;
 import com.scsse.workflow.entity.dto.UserDto;
-import com.scsse.workflow.entity.model.Team;
 
 import java.util.List;
 

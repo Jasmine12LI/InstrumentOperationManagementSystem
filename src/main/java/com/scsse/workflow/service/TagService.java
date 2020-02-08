@@ -1,7 +1,5 @@
 package com.scsse.workflow.service;
 
-import com.scsse.workflow.entity.model.Tag;
-
 import java.util.List;
 
 /**

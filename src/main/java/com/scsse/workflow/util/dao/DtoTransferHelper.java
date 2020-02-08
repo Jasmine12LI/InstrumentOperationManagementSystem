@@ -1,10 +1,6 @@
 package com.scsse.workflow.util.dao;
 
 import com.scsse.workflow.entity.dto.*;
-import com.scsse.workflow.entity.model.Activity;
-import com.scsse.workflow.entity.model.Recruit;
-import com.scsse.workflow.entity.model.Team;
-import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
