@@ -90,6 +90,9 @@ public class Recruit {
     @JsonBackReference(value = "recruit.applicants")
     private Set<User> applicants = new HashSet<>();
 
+    @ManyToMany(mappedBy = "successRecruits")
+    @JsonBackReference(value = "recruit.participants")
+    private Set<User> participants = new HashSet<>();
 
     public Recruit(String recruitName, Activity activity) {
         this.recruitName = recruitName;

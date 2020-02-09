@@ -171,7 +171,13 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recruit_id"))
     private Set<Recruit> applyRecruits = new HashSet<>();
-    
+
+    @ManyToMany
+    @JsonBackReference(value = "user.successRecruits")
+    @JoinTable(name = "recruit_member",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "recruit_id"))
+    private Set<Recruit> successRecruits = new HashSet<>();
     
     public User(String username, String openid) {
         this.name = username;
