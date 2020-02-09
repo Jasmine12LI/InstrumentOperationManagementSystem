@@ -17,9 +17,9 @@ import lombok.ToString;
 @ToString
 @Entity
 @NoArgsConstructor
-@Table(name = "action_record")
+@Table(name = "workflow")
 @JsonIgnoreProperties({ "handler","hibernateLazyInitializer"})
-public class ActionRecord {
+public class Workflow {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column

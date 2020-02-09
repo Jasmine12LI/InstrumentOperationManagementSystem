@@ -29,9 +29,9 @@ public class Team {
     @Column
     private String name;
 
-//    @OneToOne
-//    @JoinColumn(name = "graph_id")
-//    private Graph graph;
+    @OneToOne
+    @JoinColumn(name = "graph_id")
+    private Graph graph;
    
     /**
      * 队长id
