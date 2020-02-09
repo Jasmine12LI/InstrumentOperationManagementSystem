@@ -1,5 +1,6 @@
 package com.scsse.workflow.repository;
 
+import com.scsse.workflow.entity.model.Vector;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

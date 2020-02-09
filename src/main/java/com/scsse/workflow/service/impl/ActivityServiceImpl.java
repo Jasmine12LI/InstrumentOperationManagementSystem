@@ -2,6 +2,10 @@ package com.scsse.workflow.service.impl;
 
 import com.scsse.workflow.entity.dto.ActivityDto;
 import com.scsse.workflow.entity.dto.RecruitDto;
+import com.scsse.workflow.entity.model.Activity;
+import com.scsse.workflow.entity.model.Recruit;
+import com.scsse.workflow.entity.model.Tag;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.repository.ActivityRepository;
 import com.scsse.workflow.repository.RecruitRepository;
 import com.scsse.workflow.repository.TagRepository;
@@ -60,11 +64,11 @@ public class ActivityServiceImpl implements ActivityService {
         activityRepository.findAll().stream()
                 // if the time now is greater than the signUpDeadline
                 .filter(activity -> LocalDate.now().compareTo
-                        (activity.getActivitySignUpDeadline().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
+                        (activity.getEndTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
                                 toLocalDate()) > 0)
                 // but less than the activity time
                 .filter(activity -> LocalDate.now().compareTo
-                        (activity.getActivityTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
+                        (activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
                                 toLocalDate()) < 0)
                 .forEach(activities::add);
         return dtoTransferHelper.transferToListDto(activities, eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
@@ -76,7 +80,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityRepository.findAll().stream()
                 // if the time now is greater than the activity time
                 .filter(activity -> LocalDate.now().compareTo
-                        (activity.getActivityTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
+                        (activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
                                 toLocalDate()) > 0)
                 .forEach(activities::add);
         return dtoTransferHelper.transferToListDto(activities, eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
@@ -89,7 +93,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityRepository.findAll().stream()
                 // if the time now is less than the signUpDeadline
                 .filter(activity -> LocalDate.now().compareTo
-                        (activity.getActivitySignUpDeadline().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
+                        (activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
                                 toLocalDate()) < 0)
                 .forEach(activities::add);
         return dtoTransferHelper.transferToListDto(activities, eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
@@ -108,7 +112,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public Activity updateActivity(Activity activity) {
-        Integer activityId = activity.getActivityId();
+        Integer activityId = activity.getId();
         Activity oldActivity = activityRepository.findByActivityId(activityId);
         modelMapper.map(activity, oldActivity);
         return activityRepository.save(oldActivity);

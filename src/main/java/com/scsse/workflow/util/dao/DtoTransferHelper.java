@@ -1,6 +1,10 @@
 package com.scsse.workflow.util.dao;
 
 import com.scsse.workflow.entity.dto.*;
+import com.scsse.workflow.entity.model.Activity;
+import com.scsse.workflow.entity.model.Recruit;
+import com.scsse.workflow.entity.model.Team;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -113,7 +117,7 @@ public class DtoTransferHelper {
                 result.setAssigned(true);
             }
         }
-        result.setOrganizer(recruit.getManager());
+        result.setOrganizer(recruit.getCreator());
         return result;
     }
 
@@ -122,7 +126,7 @@ public class DtoTransferHelper {
     }
 
     @Transactional
-    public ActivityDto transferToActivityDto(Activity activity,User user) {
+    public ActivityDto transferToActivityDto(Activity activity, User user) {
         ActivityDto result = null;
         if (activity != null){
             result = modelMapper.map(activity,ActivityDto.class);
@@ -147,10 +151,10 @@ public class DtoTransferHelper {
     public UserDetailPage transferToUserDetailPage(User user) {
         UserDetailPage result = modelMapper.map(user, UserDetailPage.class);
         Set<User> colleagueSet = new HashSet<>();
-        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getMembers()));
+        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getTeam().getMembers()));
         result.setColleagueNumber(colleagueSet.size());
-        result.setFollowerNumber(userRepository.findFollowerNumberByUserId(user.getUserId()));
-        result.setFollowingPeopleNumber(user.getFollowUser().size());
+        result.setFollowerNumber(userRepository.findFollowerNumberByUserId(user.getId()));
+        result.setFollowingPeopleNumber(user.getFollowUsers().size());
         return result;
     }
 
@@ -159,7 +163,7 @@ public class DtoTransferHelper {
         UserAppliedRecruit result = new UserAppliedRecruit();
         modelMapper.map(recruit, result);
         modelMapper.map(user, result);
-        result.setActivityName(recruit.getActivity().getActivityName());
+        result.setActivityName(recruit.getActivity().getName());
         return result;
     }
 

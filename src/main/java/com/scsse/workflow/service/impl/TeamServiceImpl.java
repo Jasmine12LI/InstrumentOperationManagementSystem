@@ -3,6 +3,8 @@ package com.scsse.workflow.service.impl;
 import com.scsse.workflow.constant.ErrorMessage;
 import com.scsse.workflow.entity.dto.TeamDto;
 import com.scsse.workflow.entity.dto.UserDto;
+import com.scsse.workflow.entity.model.Team;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.TeamRepository;
 import com.scsse.workflow.service.TeamService;
@@ -52,14 +54,14 @@ public class TeamServiceImpl implements TeamService {
     @Override
     public TeamDto createTeam(Team team) {
         User loginUser = userUtil.getLoginUser();
-        team.setManager(loginUser);
+        team.setLeader(loginUser);
         team.getMembers().add(loginUser);
         return dtoTransferHelper.transferToTeamDto(teamRepository.save(team));
     }
 
     @Override
     public TeamDto updateTeam(Team team) throws Exception {
-        Optional<Team> result = teamRepository.findById(team.getTeamId());
+        Optional<Team> result = teamRepository.findById(team.getId());
         if (result.isPresent()) {
             Team oldTeam = result.get();
             modelMapper.map(team, oldTeam);
@@ -81,7 +83,8 @@ public class TeamServiceImpl implements TeamService {
             return dtoTransferHelper.transferToListDto(
                     result.get().getMembers(), user -> dtoTransferHelper.transferToUserDto((User) user)
             );
-        } else
+        } else {
             return new ArrayList<>();
+        }
     }
 }

@@ -3,6 +3,10 @@ package com.scsse.workflow.service.impl;
 import com.scsse.workflow.entity.dto.RecruitDto;
 import com.scsse.workflow.entity.dto.UserAppliedRecruit;
 import com.scsse.workflow.entity.dto.UserDto;
+import com.scsse.workflow.entity.model.Recruit;
+import com.scsse.workflow.entity.model.Tag;
+import com.scsse.workflow.entity.model.Team;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.RecruitRepository;
 import com.scsse.workflow.repository.TagRepository;
@@ -99,7 +103,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public RecruitDto updateRecruit(Recruit recruit) {
-        Integer recruitId = recruit.getRecruitId();
+        Integer recruitId = recruit.getId();
         Recruit oldRecruit = recruitRepository.findByRecruitId(recruitId);
         modelMapper.map(recruit, oldRecruit);
         return dtoTransferHelper.transferToRecruitDto(recruitRepository.save(oldRecruit), userUtil.getLoginUser());
@@ -131,7 +135,7 @@ public class RecruitServiceImpl implements RecruitService {
         Recruit recruit = recruitRepository.findByRecruitId(recruitId);
         User user = userUtil.getUserByUserId(userId);
         if (recruit != null && user != null) {
-            recruit.getMembers().add(user);
+            recruit.getTeam().getMembers().add(user);
             user.getApplyRecruits().remove(recruit);
             recruitRepository.save(recruit);
         }
@@ -142,7 +146,7 @@ public class RecruitServiceImpl implements RecruitService {
         Recruit recruit = recruitRepository.findByRecruitId(recruitId);
         User user = userUtil.getUserByUserId(userId);
         if (recruit != null && user != null) {
-            recruit.getMembers().remove(user);
+            recruit.getTeam().getMembers().remove(user);
             user.getApplyRecruits().add(recruit);
             recruitRepository.save(recruit);
         }
@@ -152,7 +156,7 @@ public class RecruitServiceImpl implements RecruitService {
     @Override
     public List<UserDto> findAllMemberOfRecruit(Integer recruitId) {
         Recruit recruit = recruitRepository.findByRecruitId(recruitId);
-        return dtoTransferHelper.transferToListDto(recruit.getMembers(), eachItem -> dtoTransferHelper.transferToUserDto((User) eachItem));
+        return dtoTransferHelper.transferToListDto(recruit.getTeam().getMembers(), eachItem -> dtoTransferHelper.transferToUserDto((User) eachItem));
     }
 
     @Override
@@ -201,7 +205,7 @@ public class RecruitServiceImpl implements RecruitService {
         recruit.setRecruitState("已完成");
         //
         Team team = recruit.getTeam();
-        team.getMembers().addAll(recruit.getMembers());
+        team.getMembers().addAll(recruit.getTeam().getMembers());
         teamRepository.save(team);
     }
 

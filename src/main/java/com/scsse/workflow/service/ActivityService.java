@@ -2,6 +2,8 @@ package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.ActivityDto;
 import com.scsse.workflow.entity.dto.RecruitDto;
+import com.scsse.workflow.entity.model.Activity;
+import com.scsse.workflow.entity.model.Tag;
 
 import java.util.List;
 import java.util.Set;
@@ -19,7 +21,6 @@ public interface ActivityService {
     List<ActivityDto> findAllFinishedActivity();
 
     List<ActivityDto> findAllFreshActivity();
-
 
     ActivityDto findActivityById(Integer activityId);
 

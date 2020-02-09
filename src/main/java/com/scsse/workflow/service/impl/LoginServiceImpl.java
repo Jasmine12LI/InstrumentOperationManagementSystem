@@ -1,6 +1,7 @@
 package com.scsse.workflow.service.impl;
 
 import com.alibaba.fastjson.JSONObject;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.repository.UserRepository;
 import com.scsse.workflow.service.LoginService;
 import org.slf4j.Logger;

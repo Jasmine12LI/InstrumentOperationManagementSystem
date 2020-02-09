@@ -1,5 +1,6 @@
 package com.scsse.workflow.service.impl;
 
+import com.scsse.workflow.entity.model.Tag;
 import com.scsse.workflow.repository.TagRepository;
 import com.scsse.workflow.service.TagService;
 import org.modelmapper.ModelMapper;

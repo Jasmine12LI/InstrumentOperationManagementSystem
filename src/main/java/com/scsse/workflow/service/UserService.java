@@ -1,6 +1,8 @@
 package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.*;
+import com.scsse.workflow.entity.model.Tag;
+import com.scsse.workflow.entity.model.User;
 
 import java.util.List;
 import java.util.Set;
@@ -39,8 +41,6 @@ public interface UserService {
      */
     void unregisterRecruit(Integer userId, Integer recruitId);
 
-    List<ActivityDto> findAllFollowedActivity(Integer userId);
-
     /**
      * 获取粉丝
      *
@@ -62,6 +62,20 @@ public interface UserService {
      * @return List{RecruitDto}
      */
     List<RecruitDto> findAllFollowedRecruit(Integer userId);
+
+    /**
+     * 返回一个用户关注的所有比赛
+     *
+     * @param userId 用户ID
+     */
+    List<ActivityDto> findAllFollowingCompetition(Integer userId);
+
+    /**
+     * 返回一个用户关注的所有课程
+     *
+     * @param userId 用户ID
+     */
+    List<ActivityDto> findAllFollowingCourse(Integer userId);
 
     /**
      * 返回一个用户申请的所有招聘

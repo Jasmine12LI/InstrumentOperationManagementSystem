@@ -1,6 +1,7 @@
 package com.scsse.workflow.util.dao;
 
 import com.scsse.workflow.constant.ErrorMessage;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.UserRepository;
 import com.scsse.workflow.util.mvc.RequestUtil;
@@ -30,7 +31,7 @@ public class UserUtil {
         if (result == null) {
             throw new WrongUsageException(ErrorMessage.USER_NOT_FOUND);
         }
-        return result.getUserId();
+        return result.getId();
     }
 
     public User getUserByUserId(Integer userId) throws WrongUsageException {
@@ -46,7 +47,7 @@ public class UserUtil {
         // This will throw null pointer exception
         if (result == null)
             throw new WrongUsageException(ErrorMessage.USER_NOT_FOUND);
-        return result.getUserId();
+        return result.getId();
     }
 
     public User saveUser(User user) {

@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto updateUser(User user) {
-        Integer userId = user.getUserId();
+        Integer userId = user.getId();
         User oldUser = userRepository.findByUserId(userId);
         modelMapper.map(user, oldUser);
         return dtoTransferHelper.transferToUserDto(userRepository.save(oldUser));
@@ -118,7 +118,17 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ActivityDto> findAllFollowedActivity(Integer userId) {
+    public List<ActivityDto> findAllFollowingCompetition(Integer userId) {
+        User user = userRepository.findByUserId(userId);
+        Set<Activity> activities = user.getFollowActivities();
+        return dtoTransferHelper.transferToListDto(
+                activities,
+                activity -> dtoTransferHelper.transferToActivityDto((Activity) activity,user)
+        );
+    }
+
+    @Override
+    public List<ActivityDto> findAllFollowingCourse(Integer userId) {
         User user = userRepository.findByUserId(userId);
         Set<Activity> activities = user.getFollowActivities();
         return dtoTransferHelper.transferToListDto(
@@ -135,7 +145,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<UserDto> findAllFollowingUser(Integer userId) {
         User user =  userRepository.findByUserId(userId);
-        return dtoTransferHelper.transferToListDto(user.getFollowUser());
+        return dtoTransferHelper.transferToListDto(user.getFollowUsers());
     }
 
     @Override
@@ -230,7 +240,7 @@ public class UserServiceImpl implements UserService {
         User originUser = userRepository.findByUserId(originUserId);
         User followUser = userRepository.findByUserId(followUserId);
         if (originUser != null && followUser != null) {
-            originUser.getFollowUser().add(followUser);
+            originUser.getFollowUsers().add(followUser);
             userRepository.save(originUser);
         }
 
@@ -241,7 +251,7 @@ public class UserServiceImpl implements UserService {
         User originUser = userRepository.findByUserId(originUserId);
         User followUser = userRepository.findByUserId(followUserId);
         if (originUser != null && followUser != null) {
-            originUser.getFollowUser().remove(followUser);
+            originUser.getFollowUsers().remove(followUser);
             userRepository.save(originUser);
         }
     }
@@ -258,7 +268,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<TeamDto> findCreatedTeam(User user) {
         return dtoTransferHelper.transferToListDto(
-            teamRepository.findAllByManager_UserIdEquals(user.getUserId())
+            teamRepository.findAllByManager_UserIdEquals(user.getId())
         );
     }
 

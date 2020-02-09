@@ -1,6 +1,7 @@
 package com.scsse.workflow.controller;
 
 import com.scsse.workflow.entity.dto.UserDetailPage;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;
@@ -77,7 +78,7 @@ public class UserController {
      */
     @PutMapping("/user/self")
     public Result updateUserInformation(@RequestBody User user) throws WrongUsageException {
-        user.setUserId(userUtil.getLoginUserId());
+        user.setId(userUtil.getLoginUserId());
         return ResultUtil.success(
                 userService.updateUser(user)
         );
@@ -141,6 +142,37 @@ public class UserController {
         );
     }
 
+    /**
+     * 获取用户关注的所有课程
+     *
+     * @param userId 调用者的openid
+     * @return List{Activity}
+     * <p>
+     * e.g.
+     * GET /user/1/followedCourse
+     */
+    @GetMapping("/user/{userId}/followedCourse")
+    public Result getFollowedCourse(@PathVariable() Integer userId) {
+        return ResultUtil.success(
+                userService.findAllFollowedActivity(userId)
+        );
+    }
+
+    /**
+     * 获取用户的个人工作进展
+     *
+     * @param userId 调用者的openid
+     * @return List{Activity}
+     * <p>
+     * e.g.
+     * GET /user/1/followedCourse
+     */
+    @GetMapping("/user/{userId}/workFlow")
+    public Result getWorkProgress(@PathVariable() Integer userId) {
+        return ResultUtil.success(
+                userService.findAllWorkFlow(userId)
+        );
+    }
 
     /**
      * 关注一个user
@@ -227,4 +259,34 @@ public class UserController {
         userService.unfollowActivity(userUtil.getLoginUserId(), activityId);
         return ResultUtil.success();
     }
+
+    /**
+     * 关注一个课程
+     *
+     * @param courseId 课程id
+     * @return 例:
+     * url:
+     * PUT /user/recruit/1
+     */
+    @PutMapping("/user/course/{courseId}")
+    public Result followCourse(@PathVariable() Integer courseId) throws WrongUsageException {
+        userService.followCourse(userUtil.getLoginUserId(), courseId);
+        return ResultUtil.success();
+    }
+
+    /**
+     * 取消关注一个课程
+     *
+     * @param courseId 课程id
+     * @return 例:
+     * url:
+     * PUT /user/recruit/1
+     */
+    @DeleteMapping("/user/course/{courseId}")
+    public Result unfollowCourse(@PathVariable() Integer courseId) throws WrongUsageException {
+        userService.unfollowCourse(userUtil.getLoginUserId(), courseId);
+        return ResultUtil.success();
+    }
+
+
 }

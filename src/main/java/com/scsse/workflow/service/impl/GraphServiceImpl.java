@@ -1,5 +1,6 @@
 package com.scsse.workflow.service.impl;
 
+import com.scsse.workflow.entity.model.Graph;
 import com.scsse.workflow.repository.GraphRepository;
 import com.scsse.workflow.service.GraphService;
 import org.springframework.beans.factory.annotation.Autowired;
