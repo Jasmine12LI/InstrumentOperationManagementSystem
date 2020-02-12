@@ -3,6 +3,8 @@ package com.scsse.workflow.service;
 import com.scsse.workflow.entity.dto.RecruitDto;
 import com.scsse.workflow.entity.dto.UserAppliedRecruit;
 import com.scsse.workflow.entity.dto.UserDto;
+import com.scsse.workflow.entity.model.Recruit;
+import com.scsse.workflow.entity.model.Tag;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.util.container.Pair;
 import org.springframework.stereotype.Service;

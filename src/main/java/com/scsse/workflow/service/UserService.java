@@ -1,6 +1,8 @@
 package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.*;
+import com.scsse.workflow.entity.model.Tag;
+import com.scsse.workflow.entity.model.User;
 
 import java.util.List;
 import java.util.Set;
@@ -11,7 +13,7 @@ import java.util.Set;
  */
 
 public interface UserService {
-
+    User getOne(Integer id);
     List<UserDto> findAllUser();
 
     UserDetailPage findUserDetail(Integer userId);

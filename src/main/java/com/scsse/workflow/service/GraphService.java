@@ -1,5 +1,7 @@
 package com.scsse.workflow.service;
 
+import com.scsse.workflow.entity.model.Graph;
+
 /**
  * @author Alfred Fu
  * Created on 2019-02-21 18:38

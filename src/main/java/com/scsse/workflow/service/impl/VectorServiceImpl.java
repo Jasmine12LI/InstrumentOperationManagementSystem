@@ -1,5 +1,6 @@
 package com.scsse.workflow.service.impl;
 
+import com.scsse.workflow.entity.model.Vector;
 import com.scsse.workflow.repository.VectorRepository;
 import com.scsse.workflow.service.VectorService;
 import org.modelmapper.ModelMapper;
@@ -45,7 +46,7 @@ public class VectorServiceImpl implements VectorService {
 
     @Override
     public void deleteVector(Integer vectorId) {
-        vectorRepository.deleteById(vectorId);
+        vectorRepository.delete(vectorId);
     }
 
     public void addSuccessor(Vector theVector, Vector successor) {

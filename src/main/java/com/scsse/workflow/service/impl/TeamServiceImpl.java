@@ -3,6 +3,8 @@ package com.scsse.workflow.service.impl;
 import com.scsse.workflow.constant.ErrorMessage;
 import com.scsse.workflow.entity.dto.TeamDto;
 import com.scsse.workflow.entity.dto.UserDto;
+import com.scsse.workflow.entity.model.Team;
+import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.TeamRepository;
 import com.scsse.workflow.service.TeamService;
@@ -45,23 +47,25 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public TeamDto getTeam(Integer teamId) {
-        Optional<Team> result = teamRepository.findById(teamId);
-        return result.map(dtoTransferHelper::transferToTeamDto).orElse(null);
+        Team result = teamRepository.findOne(teamId);
+        return dtoTransferHelper.transferToTeamDto(result);
+
+//        return result.map.map(dtoTransferHelper::transferToTeamDto).orElse(null);
     }
 
     @Override
     public TeamDto createTeam(Team team) {
         User loginUser = userUtil.getLoginUser();
-        team.setManager(loginUser);
+        team.setLeader(loginUser);
         team.getMembers().add(loginUser);
         return dtoTransferHelper.transferToTeamDto(teamRepository.save(team));
     }
 
     @Override
     public TeamDto updateTeam(Team team) throws Exception {
-        Optional<Team> result = teamRepository.findById(team.getTeamId());
-        if (result.isPresent()) {
-            Team oldTeam = result.get();
+        Team result = teamRepository.findOne(team.getId());
+        if (result!=null) {
+            Team oldTeam = result;
             modelMapper.map(team, oldTeam);
             return dtoTransferHelper.transferToTeamDto(teamRepository.save(oldTeam));
         } else {
@@ -71,15 +75,15 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void deleteTeam(Integer teamId) {
-        teamRepository.deleteById(teamId);
+        teamRepository.delete(teamId);
     }
 
     @Override
     public List<UserDto> getTeamMembers(Integer teamId) {
-        Optional<Team> result = teamRepository.findById(teamId);
-        if (result.isPresent()) {
+        Team result = teamRepository.findOne(teamId);
+        if (result!=null) {
             return dtoTransferHelper.transferToListDto(
-                    result.get().getMembers(), user -> dtoTransferHelper.transferToUserDto((User) user)
+                    result.getMembers(), user -> dtoTransferHelper.transferToUserDto((User) user)
             );
         } else
             return new ArrayList<>();

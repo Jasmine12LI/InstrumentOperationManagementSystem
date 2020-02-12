@@ -45,5 +45,5 @@ public class Course {
     @OneToOne
     @JoinColumn(name = "team_id")
     private Team team;
-    
+
 }
