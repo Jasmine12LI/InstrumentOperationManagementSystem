@@ -13,7 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 @Data
-@ToString
 @Entity
 @NoArgsConstructor
 @Table(name = "recruit")
@@ -59,6 +58,7 @@ public class Recruit {
      */
     @ManyToOne
     @JoinColumn(name = "activity_id")
+//    @JsonBackReference(value = "recruit.activity")
     private Activity activity;
 
     /**
@@ -66,6 +66,7 @@ public class Recruit {
      */
     @ManyToOne
     @JoinColumn(name = "creator_id")
+//    @JsonBackReference(value = "recruit.creator")
     private User creator;
 
     /**
@@ -73,6 +74,7 @@ public class Recruit {
      */
     @ManyToOne
     @JoinColumn(name = "team_id")
+    @JsonBackReference(value = "recruit.team")
     private Team team;
     
     @ManyToMany(fetch = FetchType.EAGER)
@@ -86,13 +88,20 @@ public class Recruit {
     @JsonBackReference(value = "recruit.followers")
     private Set<User> followers = new HashSet<>();
     
-    @ManyToMany(mappedBy = "applyRecruits")
+    @ManyToMany(mappedBy = "applyRecruits" , cascade = CascadeType.REMOVE)
     @JsonBackReference(value = "recruit.applicants")
     private Set<User> applicants = new HashSet<>();
 
-    @ManyToMany(mappedBy = "successRecruits")
+    @ManyToMany
     @JsonBackReference(value = "recruit.participants")
+    @JoinTable(name = "recruit_member",
+            joinColumns = @JoinColumn(name = "recruit_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> participants = new HashSet<>();
+
+//    @ManyToMany(mappedBy = "successRecruits")
+//    @JsonBackReference(value = "recruit.participants")
+//    private Set<User> participants = new HashSet<>();
 
     public Recruit(String recruitName, Activity activity) {
         this.recruitName = recruitName;
@@ -108,5 +117,14 @@ public class Recruit {
         this.recruitRegisteredNumber = recruitRegisteredNumber;
         this.creator = manager;
         this.activity = activity;
+    }
+
+    @Override
+    public String toString() {
+        return "Recruit{" +
+                "id=" + id +
+                ", recruitDescription='" + recruitDescription + '\'' +
+                ", recruitName='" + recruitName + '\'' +
+                '}';
     }
 }

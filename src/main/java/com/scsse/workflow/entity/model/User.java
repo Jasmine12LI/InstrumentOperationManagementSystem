@@ -156,7 +156,7 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "activity_id"))
     private Set<Activity> followActivities = new HashSet<>();
-    
+
     @ManyToMany
     @JsonBackReference(value = "user.followRecruits")
     @JoinTable(name = "user_recruit_follower",
@@ -171,13 +171,17 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "recruit_id"))
     private Set<Recruit> applyRecruits = new HashSet<>();
 
-    @ManyToMany
+//    @ManyToMany
+//    @JsonBackReference(value = "user.successRecruits")
+//    @JoinTable(name = "recruit_member",
+//            joinColumns = @JoinColumn(name = "user_id"),
+//            inverseJoinColumns = @JoinColumn(name = "recruit_id"))
+//    private Set<Recruit> successRecruits = new HashSet<>();
+
+    @ManyToMany(mappedBy = "participants")
     @JsonBackReference(value = "user.successRecruits")
-    @JoinTable(name = "recruit_member",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "recruit_id"))
     private Set<Recruit> successRecruits = new HashSet<>();
-    
+
     public User(String username, String openid) {
         this.name = username;
         this.openId = openid;
@@ -207,5 +211,15 @@ public class User {
     public int hashCode() {
         return Objects.hash(getId(), getName(), getStuNumber(), getStuNumber(), getPhone(), getEmail(), 
         		getSpecialty(), getResume(), getOpenId());
+    }
+
+    @Override
+    public String toString() {
+        return "User{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", openId='" + openId + '\'' +
+                '}';
     }
 }

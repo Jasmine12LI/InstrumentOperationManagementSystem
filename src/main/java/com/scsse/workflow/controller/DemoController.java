@@ -2,6 +2,8 @@ package com.scsse.workflow.controller;
 
 import java.util.Set;
 
+import com.scsse.workflow.entity.model.Recruit;
+import com.scsse.workflow.service.RecruitService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -30,8 +32,8 @@ public class DemoController {
 //	AnswerService answerService;
 //	@Autowired
 //	ActivityService activityService;
-//	@Autowired
-//	RecruitService recruitService;
+	@Autowired
+RecruitService recruitService;
 //	@Autowired
 //	AccessService accessService;
 	
@@ -94,10 +96,10 @@ public class DemoController {
 //		
 //		return activityService.getOne(1);
 //	}
-//	@GetMapping(value = "/get/recruit")
-//	@ResponseBody
-//	public Recruit showRecruit(Integer id) throws Exception {
-//		
-//		return recruitService.getOne(1);
-//	}
+	@GetMapping(value = "/get/recruit")
+	@ResponseBody
+	public Recruit showRecruit(Integer id) throws Exception {
+
+		return recruitService.getOne(1);
+	}
 }

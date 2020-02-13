@@ -57,5 +57,13 @@ public class Enroll {
     @Column
     private Byte status;
 
-   
+    @Override
+    public String toString() {
+        return "Enroll{" +
+                "enrollId='" + enrollId + '\'' +
+                ", signUpTime=" + signUpTime +
+                ", quantityType=" + quantityType +
+                ", status=" + status +
+                '}';
+    }
 }

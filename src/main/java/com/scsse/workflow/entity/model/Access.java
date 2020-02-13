@@ -33,4 +33,13 @@ public class Access {
 	@ManyToMany(mappedBy = "accesses")
 	@JsonBackReference(value = "access.roles")
 	Set<Role> roles = new HashSet<>();
+
+	@Override
+	public String toString() {
+		return "Access{" +
+				"id=" + id +
+				", url='" + url + '\'' +
+				", title='" + title + '\'' +
+				'}';
+	}
 }

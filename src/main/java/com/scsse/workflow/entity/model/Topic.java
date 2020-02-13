@@ -72,6 +72,16 @@ public class Topic {
     @ManyToMany(mappedBy = "topics")
     @JsonBackReference(value = "topic.likers")
     Set<User> likers = new HashSet<>();
-    
-  
+
+    @Override
+    public String toString() {
+        return "Topic{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", content='" + content + '\'' +
+                ", likeCount=" + likeCount +
+                ", replyCount=" + replyCount +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

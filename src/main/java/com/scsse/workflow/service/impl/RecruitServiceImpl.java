@@ -23,6 +23,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.persistence.criteria.Predicate;
@@ -93,7 +94,8 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public RecruitDto findRecruitById(Integer recruitId) {
-        return dtoTransferHelper.transferToRecruitDto(recruitRepository.findOne(recruitId), userUtil.getLoginUser());
+        User u = userUtil.getLoginUser();
+        return dtoTransferHelper.transferToRecruitDto(recruitRepository.findOne(recruitId), u);
     }
 
     @Override
@@ -124,7 +126,8 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public void cancelAppliedRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
-        Recruit recruit = recruitRepository.findOne(recruitId);
+        Recruit recruit = getOne(recruitId);
+        Recruit recruit1 = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
         user.getApplyRecruits().remove(recruit);
         userUtil.saveUser(user);
@@ -226,4 +229,10 @@ public class RecruitServiceImpl implements RecruitService {
         return result;
     }
 
+    @Override
+    public Recruit getOne(Integer id) {
+        System.out.println("id: " + id);
+        Recruit recruit = recruitRepository.findOne(id);
+        return recruit;
+    }
 }
