@@ -107,4 +107,6 @@ public interface RecruitService {
     void finishRecruit(Integer recruitId);
 
     List<UserAppliedRecruit> findUsersAppliedMyRecruits() throws WrongUsageException;
+
+    Recruit getOne(Integer i);
 }

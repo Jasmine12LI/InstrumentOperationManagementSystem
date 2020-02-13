@@ -34,4 +34,12 @@ public class Answer {
     @Column
     private Boolean correct;
 
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", correct=" + correct +
+                '}';
+    }
 }

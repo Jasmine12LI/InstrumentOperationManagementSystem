@@ -63,6 +63,13 @@ public class Reply {
     @ManyToMany(mappedBy = "replys")
     @JsonBackReference(value = "reply.likers")
   	Set<User> likers = new HashSet<>();
-      
-  
+
+    @Override
+    public String toString() {
+        return "Reply{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
 }

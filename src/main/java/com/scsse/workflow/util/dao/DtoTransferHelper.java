@@ -107,13 +107,13 @@ public class DtoTransferHelper {
         RecruitDto result = modelMapper.map(recruit, RecruitDto.class);
         // CAUTION
         if (user != null) {
-            if (user.getApplyRecruits().contains(recruit)) {
+            if (user.getApplyRecruits()!=null&&user.getApplyRecruits().contains(recruit)) {
                 result.setApplied(true);
             }
-            if (user.getFollowRecruits().contains(recruit)) {
+            if (user.getFollowRecruits()!=null&&user.getFollowRecruits().contains(recruit)) {
                 result.setFollowed(true);
             }
-            if (user.getSuccessRecruits().contains(recruit)) {
+            if (user.getSuccessRecruits()!=null&&user.getSuccessRecruits().contains(recruit)) {
                 result.setAssigned(true);
             }
         }
@@ -151,7 +151,7 @@ public class DtoTransferHelper {
     public UserDetailPage transferToUserDetailPage(User user) {
         UserDetailPage result = modelMapper.map(user, UserDetailPage.class);
         Set<User> colleagueSet = new HashSet<>();
-        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getTeam().getMembers()));
+        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getParticipants()));
         result.setColleagueNumber(colleagueSet.size());
         result.setFollowerNumber(userRepository.findFollowerNumberByUserId(user.getId()));
         result.setFollowingPeopleNumber(user.getFollowUsers().size());
@@ -163,7 +163,8 @@ public class DtoTransferHelper {
         UserAppliedRecruit result = new UserAppliedRecruit();
         modelMapper.map(recruit, result);
         modelMapper.map(user, result);
-        result.setActivityName(recruit.getActivity().getName());
+        if(recruit.getActivity()!=null)
+             result.setActivityName(recruit.getActivity().getName());
         return result;
     }
 

@@ -4,7 +4,6 @@ import java.util.HashSet;
 import java.util.Set;
 
 import javax.persistence.*;
-import javax.persistence.Access;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -44,4 +43,12 @@ public class Role {
 	@JoinTable(name = "role_access", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "access_id"))
 	private Set<Access> accesses = new HashSet<>();
 
+	@Override
+	public String toString() {
+		return "Role{" +
+				"id=" + id +
+				", name='" + name + '\'' +
+				", status=" + status +
+				'}';
+	}
 }

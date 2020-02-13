@@ -93,7 +93,7 @@ public class ActivityServiceImpl implements ActivityService {
         activityRepository.findAll().stream()
                 // if the time now is less than the signUpDeadline
                 .filter(activity -> LocalDate.now().compareTo
-                        (activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
+                        (activity.getEndTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
                                 toLocalDate()) < 0)
                 .forEach(activities::add);
         return dtoTransferHelper.transferToListDto(activities, eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
@@ -102,7 +102,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public ActivityDto findActivityById(Integer activityId) {
-        return dtoTransferHelper.transferToActivityDto(activityRepository.findByActivityId(activityId),userUtil.getLoginUser());
+        return dtoTransferHelper.transferToActivityDto(activityRepository.findOne(activityId),userUtil.getLoginUser());
     }
 
     @Override
@@ -113,33 +113,33 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public Activity updateActivity(Activity activity) {
         Integer activityId = activity.getId();
-        Activity oldActivity = activityRepository.findByActivityId(activityId);
+        Activity oldActivity = activityRepository.findOne(activityId);
         modelMapper.map(activity, oldActivity);
         return activityRepository.save(oldActivity);
     }
 
     @Override
     public void deleteActivityById(Integer activityId) {
-        activityRepository.deleteById(activityId);
+        activityRepository.delete(activityId);
     }
 
     @Override
     public List<RecruitDto> findAllRecruitOfActivity(Integer activityId) {
         return dtoTransferHelper.transferToListDto(
-                recruitRepository.findAllByActivity_ActivityId(activityId), userUtil.getLoginUser(),
+                recruitRepository.findAllByActivity_Id(activityId), userUtil.getLoginUser(),
                 (firstParam, secondParam) -> dtoTransferHelper.transferToRecruitDto((Recruit) firstParam, (User) secondParam)
         );
     }
 
     @Override
     public Set<Tag> findAllTagOfActivity(Integer activityId) {
-        Activity activity = activityRepository.findByActivityId(activityId);
+        Activity activity = activityRepository.findOne(activityId);
         return activity.getActivityTags();
     }
 
     @Override
     public void bindTagToActivity(Integer activityId, Integer tagId) {
-        Activity activity = activityRepository.findByActivityId(activityId);
+        Activity activity = activityRepository.findOne(activityId);
         Tag tag = tagRepository.findByTagId(tagId);
         if (activity != null && tag != null && !activity.getActivityTags().contains(tag)) {
             activity.getActivityTags().add(tag);
@@ -150,7 +150,7 @@ public class ActivityServiceImpl implements ActivityService {
 
     @Override
     public void unBindTagToActivity(Integer activityId, Integer tagId) {
-        Activity activity = activityRepository.findByActivityId(activityId);
+        Activity activity = activityRepository.findOne(activityId);
         activity.getActivityTags().remove(tagRepository.findByTagId(tagId));
         activityRepository.save(activity);
     }

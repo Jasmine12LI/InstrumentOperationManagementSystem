@@ -45,5 +45,12 @@ public class Course {
     @OneToOne
     @JoinColumn(name = "team_id")
     private Team team;
-    
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

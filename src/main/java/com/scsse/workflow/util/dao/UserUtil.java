@@ -23,11 +23,12 @@ public class UserUtil {
 
     public User getLoginUser() {
         // This will throw null pointer exception
-        return userRepository.findByOpenid(RequestUtil.getOpenId());
+//        return userRepository.findByOpenId(RequestUtil.getOpenId());
+    return userRepository.findOne(1);
     }
 
     public Integer findUserIdByOpenid(String openId) throws WrongUsageException {
-        User result = userRepository.findByOpenid(openId);
+        User result = userRepository.findByOpenId(openId);
         if (result == null) {
             throw new WrongUsageException(ErrorMessage.USER_NOT_FOUND);
         }
@@ -35,7 +36,7 @@ public class UserUtil {
     }
 
     public User getUserByUserId(Integer userId) throws WrongUsageException {
-        User result = userRepository.findByUserId(userId);
+        User result = userRepository.findOne(userId);
         if (result == null) {
             throw new WrongUsageException(ErrorMessage.USER_NOT_FOUND);
         }
@@ -43,11 +44,12 @@ public class UserUtil {
     }
 
     public Integer getLoginUserId() throws WrongUsageException {
-        User result = userRepository.findByOpenid(RequestUtil.getOpenId());
-        // This will throw null pointer exception
-        if (result == null)
-            throw new WrongUsageException(ErrorMessage.USER_NOT_FOUND);
-        return result.getId();
+        return 1;
+//        User result = userRepository.findByOpenId(RequestUtil.getOpenId());
+//        // This will throw null pointer exception
+//        if (result == null)
+//            throw new WrongUsageException(ErrorMessage.USER_NOT_FOUND);
+//        return result.getId();
     }
 
     public User saveUser(User user) {

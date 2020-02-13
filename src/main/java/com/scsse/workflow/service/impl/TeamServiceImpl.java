@@ -47,8 +47,10 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public TeamDto getTeam(Integer teamId) {
-        Optional<Team> result = teamRepository.findById(teamId);
-        return result.map(dtoTransferHelper::transferToTeamDto).orElse(null);
+        Team result = teamRepository.findOne(teamId);
+        return dtoTransferHelper.transferToTeamDto(result);
+
+//        return result.map.map(dtoTransferHelper::transferToTeamDto).orElse(null);
     }
 
     @Override
@@ -61,9 +63,9 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public TeamDto updateTeam(Team team) throws Exception {
-        Optional<Team> result = teamRepository.findById(team.getId());
-        if (result.isPresent()) {
-            Team oldTeam = result.get();
+        Team result = teamRepository.findOne(team.getId());
+        if (result!=null) {
+            Team oldTeam = result;
             modelMapper.map(team, oldTeam);
             return dtoTransferHelper.transferToTeamDto(teamRepository.save(oldTeam));
         } else {
@@ -73,18 +75,17 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     public void deleteTeam(Integer teamId) {
-        teamRepository.deleteById(teamId);
+        teamRepository.delete(teamId);
     }
 
     @Override
     public List<UserDto> getTeamMembers(Integer teamId) {
-        Optional<Team> result = teamRepository.findById(teamId);
-        if (result.isPresent()) {
+        Team result = teamRepository.findOne(teamId);
+        if (result!=null) {
             return dtoTransferHelper.transferToListDto(
-                    result.get().getMembers(), user -> dtoTransferHelper.transferToUserDto((User) user)
+                    result.getMembers(), user -> dtoTransferHelper.transferToUserDto((User) user)
             );
-        } else {
+        } else
             return new ArrayList<>();
-        }
     }
 }
