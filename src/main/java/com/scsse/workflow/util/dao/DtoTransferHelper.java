@@ -151,7 +151,7 @@ public class DtoTransferHelper {
     public UserDetailPage transferToUserDetailPage(User user) {
         UserDetailPage result = modelMapper.map(user, UserDetailPage.class);
         Set<User> colleagueSet = new HashSet<>();
-        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getTeam().getMembers()));
+        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getParticipants()));
         result.setColleagueNumber(colleagueSet.size());
         result.setFollowerNumber(userRepository.findFollowerNumberByUserId(user.getId()));
         result.setFollowingPeopleNumber(user.getFollowUsers().size());

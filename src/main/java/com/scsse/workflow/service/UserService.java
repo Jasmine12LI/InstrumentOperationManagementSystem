@@ -13,7 +13,7 @@ import java.util.Set;
  */
 
 public interface UserService {
-
+    User getOne(Integer id);
     List<UserDto> findAllUser();
 
     UserDetailPage findUserDetail(Integer userId);

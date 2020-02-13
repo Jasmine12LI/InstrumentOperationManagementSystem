@@ -64,10 +64,10 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public List<RecruitDto> findPaginationRecruit(Integer pageNum, Integer pageSize) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "creatTime");
+        Pageable pageable = new PageRequest(pageNum, pageSize, Sort.Direction.DESC, "creatTime");
         List<RecruitDto> result = new ArrayList<>();
         User currentUser = userUtil.getLoginUser();
-        recruitRepository.findAll(pageable).get().map(
+        recruitRepository.findAll(pageable).map(
                 o -> dtoTransferHelper.transferToRecruitDto(o, currentUser)
         ).forEach(result::add);
         return result;
@@ -75,7 +75,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public List<RecruitDto> findPaginationRecruitWithCriteria(Integer pageNum, Integer pageSize, HashMap<Integer, Pair<String, String>> queryParam) {
-        Pageable pageable = PageRequest.of(pageNum, pageSize, Sort.Direction.DESC, "createTime");
+        Pageable pageable = new PageRequest(pageNum, pageSize, Sort.Direction.DESC, "createTime");
         List<RecruitDto> result = new ArrayList<>();
         User currentUser = userUtil.getLoginUser();
         recruitRepository.findAll((Specification<Recruit>) (root, query, criteriaBuilder) -> {
@@ -85,7 +85,7 @@ public class RecruitServiceImpl implements RecruitService {
                     (predicateType, KV) -> predicateList.add(predicateHelper.generatePredicate(predicateType, KV.getKey(), KV.getValue()))
             );
             return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
-        }, pageable).get().map(
+        }, pageable).map(
                 o -> dtoTransferHelper.transferToRecruitDto(o, currentUser)
         ).forEach(result::add);
         return result;
@@ -93,7 +93,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public RecruitDto findRecruitById(Integer recruitId) {
-        return dtoTransferHelper.transferToRecruitDto(recruitRepository.findByRecruitId(recruitId), userUtil.getLoginUser());
+        return dtoTransferHelper.transferToRecruitDto(recruitRepository.findOne(recruitId), userUtil.getLoginUser());
     }
 
     @Override
@@ -104,19 +104,19 @@ public class RecruitServiceImpl implements RecruitService {
     @Override
     public RecruitDto updateRecruit(Recruit recruit) {
         Integer recruitId = recruit.getId();
-        Recruit oldRecruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit oldRecruit = recruitRepository.findOne(recruitId);
         modelMapper.map(recruit, oldRecruit);
         return dtoTransferHelper.transferToRecruitDto(recruitRepository.save(oldRecruit), userUtil.getLoginUser());
     }
 
     @Override
     public void deleteRecruitById(Integer recruitId) {
-        recruitRepository.deleteByRecruitId(recruitId);
+        recruitRepository.delete(recruitId);
     }
 
     @Override
     public void applyOneRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
         user.getApplyRecruits().add(recruit);
         userUtil.saveUser(user);
@@ -124,7 +124,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public void cancelAppliedRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
         user.getApplyRecruits().remove(recruit);
         userUtil.saveUser(user);
@@ -132,10 +132,10 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public void addMember(Integer userId, Integer recruitId) throws WrongUsageException {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
         if (recruit != null && user != null) {
-            recruit.getTeam().getMembers().add(user);
+            recruit.getParticipants().add(user);
             user.getApplyRecruits().remove(recruit);
             recruitRepository.save(recruit);
         }
@@ -143,10 +143,11 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public void removeMember(Integer userId, Integer recruitId) throws WrongUsageException {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
+
         if (recruit != null && user != null) {
-            recruit.getTeam().getMembers().remove(user);
+            recruit.getParticipants().remove(user);
             user.getApplyRecruits().add(recruit);
             recruitRepository.save(recruit);
         }
@@ -155,19 +156,19 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public List<UserDto> findAllMemberOfRecruit(Integer recruitId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
-        return dtoTransferHelper.transferToListDto(recruit.getTeam().getMembers(), eachItem -> dtoTransferHelper.transferToUserDto((User) eachItem));
+        Recruit recruit = recruitRepository.findOne(recruitId);
+        return dtoTransferHelper.transferToListDto(recruit.getParticipants(), eachItem -> dtoTransferHelper.transferToUserDto((User) eachItem));
     }
 
     @Override
     public List<UserDto> findAllFollowerOfRecruit(Integer recruitId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         return dtoTransferHelper.transferToListDto(recruit.getFollowers(), eachItem -> dtoTransferHelper.transferToUserDto((User) eachItem));
     }
 
     @Override
     public List<UserDto> findAllApplicantOfRecruit(Integer recruitId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         return dtoTransferHelper.transferToListDto(recruit.getApplicants(), eachItem -> dtoTransferHelper.transferToUserDto((User) eachItem));
 
 
@@ -175,13 +176,13 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public Set<Tag> findAllTagOfRecruit(Integer recruitId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         return recruit.getRecruitTags();
     }
 
     @Override
     public void bindTagToRecruit(Integer recruitId, Integer tagId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         Tag tag = tagRepository.findByTagId(tagId);
         if (recruit != null && tag != null && !recruit.getRecruitTags().contains(tag)) {
             recruit.getRecruitTags().add(tag);
@@ -191,7 +192,7 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public void unBindTagToRecruit(Integer recruitId, Integer tagId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         Tag tag = tagRepository.findByTagId(tagId);
         if (recruit != null && tag != null) {
             recruit.getRecruitTags().remove(tag);
@@ -201,18 +202,18 @@ public class RecruitServiceImpl implements RecruitService {
 
     @Override
     public void finishRecruit(Integer recruitId) {
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         recruit.setRecruitState("已完成");
-        //
+
         Team team = recruit.getTeam();
-        team.getMembers().addAll(recruit.getTeam().getMembers());
+        team.getMembers().addAll(recruit.getParticipants());
         teamRepository.save(team);
     }
 
     @Override
     public List<UserAppliedRecruit> findUsersAppliedMyRecruits() throws WrongUsageException {
         List<UserAppliedRecruit> result = new ArrayList<>();
-        Set<Recruit> recruits = recruitRepository.findAllByManager_UserId(userUtil.getLoginUserId());
+        Set<Recruit> recruits = recruitRepository.findAllByCreator_Id(userUtil.getLoginUserId());
         // select all applicant and add it to the result.
         recruits.forEach(
             recruit ->

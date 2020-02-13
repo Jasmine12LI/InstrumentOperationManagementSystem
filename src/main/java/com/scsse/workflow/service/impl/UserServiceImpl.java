@@ -1,5 +1,6 @@
 package com.scsse.workflow.service.impl;
 
+
 import com.scsse.workflow.entity.dto.*;
 import com.scsse.workflow.entity.model.*;
 import com.scsse.workflow.repository.*;
@@ -8,6 +9,7 @@ import com.scsse.workflow.util.dao.DtoTransferHelper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -55,7 +57,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDetailPage findUserDetail(Integer userId) {
-        return dtoTransferHelper.transferToUserDetailPage(userRepository.findByUserId(userId));
+        return dtoTransferHelper.transferToUserDetailPage(userRepository.findOne(userId));
     }
 
     @Override
@@ -66,7 +68,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDto updateUser(User user) {
         Integer userId = user.getId();
-        User oldUser = userRepository.findByUserId(userId);
+        User oldUser = userRepository.findOne(userId);
         modelMapper.map(user, oldUser);
         return dtoTransferHelper.transferToUserDto(userRepository.save(oldUser));
 
@@ -74,13 +76,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void deleteUserById(Integer userId) {
-        userRepository.deleteByUserId(userId);
+        userRepository.deleteById(userId);
     }
 
     @Override
     public void followRecruit(Integer userId, Integer recruitId) {
-        User user = userRepository.findByUserId(userId);
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        User user = userRepository.findOne(userId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         if (user != null && recruit != null) {
             user.getFollowRecruits().add(recruit);
             userRepository.save(user);
@@ -89,8 +91,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void registerRecruit(Integer userId, Integer recruitId) {
-        User user = userRepository.findByUserId(userId);
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        User user = userRepository.findOne(userId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         if (user != null && recruit != null) {
             user.getApplyRecruits().add(recruit);
             userRepository.save(user);
@@ -99,8 +101,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unfollowRecruit(Integer userId, Integer recruitId) {
-        User user = userRepository.findByUserId(userId);
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        User user = userRepository.findOne(userId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         if (user != null && recruit != null) {
             user.getFollowRecruits().remove(recruit);
             userRepository.save(user);
@@ -109,8 +111,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unregisterRecruit(Integer userId, Integer recruitId) {
-        User user = userRepository.findByUserId(userId);
-        Recruit recruit = recruitRepository.findByRecruitId(recruitId);
+        User user = userRepository.findOne(userId);
+        Recruit recruit = recruitRepository.findOne(recruitId);
         if (user != null && recruit != null) {
             user.getApplyRecruits().remove(recruit);
             userRepository.save(user);
@@ -118,18 +120,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<ActivityDto> findAllFollowingCompetition(Integer userId) {
-        User user = userRepository.findByUserId(userId);
-        Set<Activity> activities = user.getFollowActivities();
-        return dtoTransferHelper.transferToListDto(
-                activities,
-                activity -> dtoTransferHelper.transferToActivityDto((Activity) activity,user)
-        );
-    }
-
-    @Override
-    public List<ActivityDto> findAllFollowingCourse(Integer userId) {
-        User user = userRepository.findByUserId(userId);
+    public List<ActivityDto> findAllFollowedActivity(Integer userId) {
+        User user = userRepository.findOne(userId);
         Set<Activity> activities = user.getFollowActivities();
         return dtoTransferHelper.transferToListDto(
                 activities,
@@ -144,13 +136,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAllFollowingUser(Integer userId) {
-        User user =  userRepository.findByUserId(userId);
+        User user =  userRepository.findOne(userId);
         return dtoTransferHelper.transferToListDto(user.getFollowUsers());
     }
 
     @Override
     public List<RecruitDto> findAllFollowedRecruit(Integer userId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findOne(userId);
         if (user != null) {
             return dtoTransferHelper.transferToListDto(
                     user.getFollowRecruits(), user,
@@ -163,7 +155,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<RecruitDto> findAllRegisteredRecruit(Integer userId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findOne(userId);
         if (user != null) {
             return dtoTransferHelper.transferToListDto(
                     user.getApplyRecruits(), user,
@@ -178,7 +170,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<RecruitDto> findAllAssignedRecruit(Integer userId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findOne(userId);
         if (user != null) {
             return dtoTransferHelper.transferToListDto(
                     user.getSuccessRecruits(), user,
@@ -191,13 +183,13 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Set<Tag> findAllTagOfUser(Integer userId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findOne(userId);
         return user.getUserTags();
     }
 
     @Override
     public void bindTagToUser(Integer userId, Integer tagId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findOne(userId);
         Tag tag = tagRepository.findByTagId(tagId);
         if (user != null && tag != null) {
             user.getUserTags().add(tag);
@@ -207,7 +199,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unBindTagToUser(Integer userId, Integer tagId) {
-        User user = userRepository.findByUserId(userId);
+        User user = userRepository.findOne(userId);
         Tag tag = tagRepository.findByTagId(tagId);
         if (user != null && tag != null) {
             user.getUserTags().remove(tag);
@@ -217,8 +209,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void followActivity(Integer userId, Integer activityId) {
-        User user = userRepository.findByUserId(userId);
-        Activity activity = activityRepository.findByActivityId(activityId);
+        User user = userRepository.findOne(userId);
+        Activity activity = activityRepository.findOne(activityId);
         if (user != null && activity != null) {
             user.getFollowActivities().add(activity);
             userRepository.save(user);
@@ -227,8 +219,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unfollowActivity(Integer userId, Integer activityId) {
-        User user = userRepository.findByUserId(userId);
-        Activity activity = activityRepository.findByActivityId(activityId);
+        User user = userRepository.findOne(userId);
+        Activity activity = activityRepository.findOne(activityId);
         if (user != null && activity != null) {
             user.getFollowActivities().remove(activity);
             userRepository.save(user);
@@ -237,8 +229,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void followUser(Integer originUserId, Integer followUserId) {
-        User originUser = userRepository.findByUserId(originUserId);
-        User followUser = userRepository.findByUserId(followUserId);
+        User originUser = userRepository.findOne(originUserId);
+        User followUser = userRepository.findOne(followUserId);
         if (originUser != null && followUser != null) {
             originUser.getFollowUsers().add(followUser);
             userRepository.save(originUser);
@@ -248,8 +240,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void unfollowUser(Integer originUserId, Integer followUserId) {
-        User originUser = userRepository.findByUserId(originUserId);
-        User followUser = userRepository.findByUserId(followUserId);
+        User originUser = userRepository.findOne(originUserId);
+        User followUser = userRepository.findOne(followUserId);
         if (originUser != null && followUser != null) {
             originUser.getFollowUsers().remove(followUser);
             userRepository.save(originUser);
@@ -268,8 +260,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<TeamDto> findCreatedTeam(User user) {
         return dtoTransferHelper.transferToListDto(
-            teamRepository.findAllByManager_UserIdEquals(user.getId())
+            teamRepository.findAllByLeader_Id(user.getId())
         );
+    }
+    @Transactional(propagation= Propagation.SUPPORTS)
+    public User getOne(Integer id){
+    	System.out.println("userid: "+id);
+        return userRepository.findOne(id);
     }
 
 }

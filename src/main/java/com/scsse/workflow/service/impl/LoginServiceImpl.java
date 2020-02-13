@@ -75,7 +75,7 @@ public class LoginServiceImpl implements LoginService {
             String sessionKey = jsonObject.getString("session_key");
             String openid = jsonObject.getString("openid");
 
-            if (!userRepository.existsDistinctByOpenid(openid)) {
+            if (!userRepository.existsDistinctByOpenId(openid)) {
                 userRepository.save(new User(openid));
             }
 

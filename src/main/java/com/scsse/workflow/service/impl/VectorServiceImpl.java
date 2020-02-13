@@ -46,7 +46,7 @@ public class VectorServiceImpl implements VectorService {
 
     @Override
     public void deleteVector(Integer vectorId) {
-        vectorRepository.deleteById(vectorId);
+        vectorRepository.delete(vectorId);
     }
 
     public void addSuccessor(Vector theVector, Vector successor) {
