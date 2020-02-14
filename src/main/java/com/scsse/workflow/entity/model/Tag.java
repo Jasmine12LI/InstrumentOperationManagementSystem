@@ -48,7 +48,7 @@ public class Tag {
         this.tagName = tagName;
         this.tagDescription = tagDescription;
     }
-
+/*
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -60,5 +60,5 @@ public class Tag {
     @Override
     public int hashCode() {
         return Objects.hash(getTagId());
-    }
+    }*/
 }

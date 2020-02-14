@@ -1,10 +1,7 @@
 package com.scsse.workflow.util.dao;
 
 import com.scsse.workflow.entity.dto.*;
-import com.scsse.workflow.entity.model.Activity;
-import com.scsse.workflow.entity.model.Recruit;
-import com.scsse.workflow.entity.model.Team;
-import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.entity.model.*;
 import com.scsse.workflow.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -137,7 +134,12 @@ public class DtoTransferHelper {
             }
         }
         return result;
+    }
 
+    public CourseDto transferToCourseDto(Course course) {
+        CourseDto result = new CourseDto();
+        modelMapper.map(course, result);
+        return result;
     }
 
 
