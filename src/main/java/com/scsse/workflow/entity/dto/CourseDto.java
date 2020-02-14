@@ -13,13 +13,5 @@ import java.util.Date;
 @ToString
 @NoArgsConstructor
 public class CourseDto extends Course {
-    private boolean isFollowed;
-
-    public CourseDto(String courseName, Integer courseId, User lecturer, Team team) {
-        super(courseName,courseId,lecturer,team);
-    }
-
-    public CourseDto(String courseName) {
-        super(courseName);
-    }
+    private String courseName;
 }

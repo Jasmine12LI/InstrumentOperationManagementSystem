@@ -40,8 +40,8 @@ public class Course {
     private User lecturer;
 
     @ManyToOne
-    @JoinColumn(name = "course_id")
-    private Course course;
+    @JoinColumn(name = "activity_id")
+    private Activity activity;
 
     @OneToOne
     @JoinColumn(name = "team_id")
