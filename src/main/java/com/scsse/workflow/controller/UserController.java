@@ -49,18 +49,15 @@ public class UserController {
         return ResultUtil.success(userService.findUserDetail(userId));
     }
 
-
-
-
     /**
      * 获取某个用户的具体信息
      *
      * @param userId user primary key
-     * @return User
+     * @return UserDto
      */
     @GetMapping("/user/{userId}")
     public Result getUserDetail(@PathVariable Integer userId) {
-        return ResultUtil.success(userService.findUserDetail(userId));
+        return ResultUtil.success(userService.findUser(userId));
     }
 
     /**
@@ -72,8 +69,9 @@ public class UserController {
      * Put /user/self
      * Request Body
      * {
-     * username: "test",
-     * userNumber: "10105101111"
+     * name: "test",
+     * faceImage: "/img/5.jpg",
+     * stuNumber: "10105101111"，
      * }
      */
     @PutMapping("/user/self")
@@ -127,7 +125,7 @@ public class UserController {
 
 
     /**
-     * 获取用户关注的所有比赛
+     * 获取用户关注的所有活动
      *
      * @param userId 调用者的openid
      * @return List{Activity}
@@ -200,7 +198,7 @@ public class UserController {
     @DeleteMapping("/user/follower/{followedUserId}")
     public Result unfollowUser(@PathVariable Integer followedUserId) throws WrongUsageException {
         Integer originUserId = userUtil.getLoginUserId();
-        userService.unfollowRecruit(originUserId, followedUserId);
+        userService.unfollowUser(originUserId, followedUserId);
         return ResultUtil.success();
     }
 

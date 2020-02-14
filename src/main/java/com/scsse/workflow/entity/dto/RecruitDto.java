@@ -19,7 +19,7 @@ public class RecruitDto {
 
     private String recruitName;
 
-    private String state;
+    private String recruitState;
 
     private Integer recruitWillingNumber;
 

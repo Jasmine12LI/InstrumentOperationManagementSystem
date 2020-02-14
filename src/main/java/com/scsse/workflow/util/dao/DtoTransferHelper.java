@@ -152,9 +152,16 @@ public class DtoTransferHelper {
     @Transactional
     public UserDetailPage transferToUserDetailPage(User user) {
         UserDetailPage result = modelMapper.map(user, UserDetailPage.class);
+        int num;
         Set<User> colleagueSet = new HashSet<>();
-        user.getApplyRecruits().forEach(recruit -> colleagueSet.addAll(recruit.getParticipants()));
-        result.setColleagueNumber(colleagueSet.size());
+        Set<Recruit> recruits = user.getSuccessRecruits();
+        if(recruits==null||recruits.size()==0){
+            num=0;
+        }else{
+            recruits.forEach(recruit -> colleagueSet.addAll(recruit.getTeam().getMembers()));
+            num = colleagueSet.size()-1;
+        }
+        result.setColleagueNumber(num);
         result.setFollowerNumber(userRepository.findFollowerNumberByUserId(user.getId()));
         result.setFollowingPeopleNumber(user.getFollowUsers().size());
         return result;

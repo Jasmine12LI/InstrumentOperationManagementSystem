@@ -50,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseDto createCourse(Course course) {
         User loginUser = userUtil.getLoginUser();
         course.setLecturer(loginUser);
-        course.getMembers().add(loginUser);
+        course.getStudents().add(loginUser);
         return dtoTransferHelper.transferToCourseDto(courseRepository.save(course));
     }
 
@@ -76,7 +76,7 @@ public class CourseServiceImpl implements CourseService {
         Course result = courseRepository.findOne(courseId);
         if (result!=null) {
             return dtoTransferHelper.transferToListDto(
-                    result.getMembers(), user -> dtoTransferHelper.transferToUserDto((User) user)
+                    result.getStudents(), user -> dtoTransferHelper.transferToUserDto((User) user)
             );
         } else
             return new ArrayList<>();

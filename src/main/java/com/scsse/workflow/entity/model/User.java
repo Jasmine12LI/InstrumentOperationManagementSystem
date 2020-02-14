@@ -116,7 +116,7 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> userTags = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
 	@JsonBackReference(value = "user.roles")
 	@JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
 	private Set<Role> roles = new HashSet<>();
@@ -143,12 +143,9 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "activity_id"))
     private Set<Activity> joinActivities = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(mappedBy = "students")
     @JsonBackReference(value = "user.joinCourses")
-    @JoinTable(name = "user_course",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "activity_id"))
-    private Set<Activity> joinCourses = new HashSet<>();
+    private Set<Course> joinCourses = new HashSet<>();
 
     @ManyToMany
     @JsonBackReference(value = "user.followUsers")
