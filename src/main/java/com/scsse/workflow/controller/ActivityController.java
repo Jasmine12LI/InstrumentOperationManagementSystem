@@ -61,6 +61,4 @@ public class ActivityController {
     public Result getActivityDetail(@PathVariable Integer activityId) {
         return ResultUtil.success(activityService.findActivityById(activityId));
     }
-
-
 }

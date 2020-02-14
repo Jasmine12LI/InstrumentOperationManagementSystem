@@ -1,10 +1,7 @@
 package com.scsse.workflow.util.dao;
 
 import com.scsse.workflow.entity.dto.*;
-import com.scsse.workflow.entity.model.Activity;
-import com.scsse.workflow.entity.model.Recruit;
-import com.scsse.workflow.entity.model.Team;
-import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.entity.model.*;
 import com.scsse.workflow.repository.UserRepository;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
@@ -107,13 +104,13 @@ public class DtoTransferHelper {
         RecruitDto result = modelMapper.map(recruit, RecruitDto.class);
         // CAUTION
         if (user != null) {
-            if (user.getApplyRecruits().contains(recruit)) {
+            if (user.getApplyRecruits()!=null&&user.getApplyRecruits().contains(recruit)) {
                 result.setApplied(true);
             }
-            if (user.getFollowRecruits().contains(recruit)) {
+            if (user.getFollowRecruits()!=null&&user.getFollowRecruits().contains(recruit)) {
                 result.setFollowed(true);
             }
-            if (user.getSuccessRecruits().contains(recruit)) {
+            if (user.getSuccessRecruits()!=null&&user.getSuccessRecruits().contains(recruit)) {
                 result.setAssigned(true);
             }
         }
@@ -137,7 +134,12 @@ public class DtoTransferHelper {
             }
         }
         return result;
+    }
 
+    public CourseDto transferToCourseDto(Course course) {
+        CourseDto result = new CourseDto();
+        modelMapper.map(course, result);
+        return result;
     }
 
 
@@ -163,7 +165,8 @@ public class DtoTransferHelper {
         UserAppliedRecruit result = new UserAppliedRecruit();
         modelMapper.map(recruit, result);
         modelMapper.map(user, result);
-        result.setActivityName(recruit.getActivity().getName());
+        if(recruit.getActivity()!=null)
+             result.setActivityName(recruit.getActivity().getName());
         return result;
     }
 

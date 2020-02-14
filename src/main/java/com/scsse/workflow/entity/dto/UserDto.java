@@ -14,7 +14,7 @@ import lombok.Setter;
 public class UserDto {
     private Integer userId;
 
-    private String username;
+    private String userName;
 
     private Integer gender;
 

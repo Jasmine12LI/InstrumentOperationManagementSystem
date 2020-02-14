@@ -129,10 +129,19 @@ public interface UserService {
 
     void unfollowRecruit(Integer userId, Integer recruitId);
 
-
     List<TeamDto> findJoinedTeam(User user);
 
     List<TeamDto> findCreatedTeam(User user);
 
+    public List<TeamDto> findCreatedCourse(User user);
 
+    List<CourseDto> findJoinedCourse(User user);
+
+    Object findAllFollowedActivity(Integer userId);
+
+    Object findAllWorkFlow(Integer userId);
+
+    void followCourse(Integer loginUserId, Integer courseId);
+
+    void unfollowCourse(Integer loginUserId, Integer courseId);
 }

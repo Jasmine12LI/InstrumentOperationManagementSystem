@@ -24,6 +24,14 @@ public class Question {
     @Column
     private String description;
 
+    @Override
+    public String toString() {
+        return "Question{" +
+                "id=" + id +
+                ", description='" + description + '\'' +
+                '}';
+    }
+
     @OneToMany(mappedBy = "question")
   	@JsonBackReference(value = "question.question")
       private Set<Answer> answers = new HashSet<>();

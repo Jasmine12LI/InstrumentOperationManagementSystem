@@ -12,7 +12,6 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 @Data
-@ToString
 @Entity
 @NoArgsConstructor
 @Table(name = "team")
@@ -38,10 +37,12 @@ public class Team {
      */
     @ManyToOne
     @JoinColumn(name = "leader_id")
+//    @JsonBackReference(value="team.leader")
     private User leader;
 
     @ManyToOne
     @JoinColumn(name = "activity_id")
+//    @JsonBackReference(value="team.activity")
     private Activity activity;
     
     @ManyToMany
@@ -53,11 +54,18 @@ public class Team {
     @JsonBackReference(value = "team.members")
     private Set<User> members = new HashSet<>();
   
-    @OneToMany(mappedBy = "team")
-    @JsonBackReference(value = "team.recruits")
-    private Set<Recruit> recruits = new HashSet<>();
+//    @OneToMany(mappedBy = "team")
+//    @JsonBackReference(value = "team.recruits")
+//    private Set<Recruit> recruits = new HashSet<>();
     
     @Column(name = "enroll_id")
     private String enroll_id;
-    
+
+    @Override
+    public String toString() {
+        return "Team{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

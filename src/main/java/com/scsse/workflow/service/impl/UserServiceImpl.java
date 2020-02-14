@@ -39,8 +39,10 @@ public class UserServiceImpl implements UserService {
 
     private final TeamRepository teamRepository;
 
+    private final CourseRepository courseRepository;
+
     @Autowired
-    public UserServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper, RecruitRepository recruitRepository, UserRepository userRepository, TagRepository tagRepository, ActivityRepository activityRepository, TeamRepository teamRepository) {
+    public UserServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper, RecruitRepository recruitRepository, UserRepository userRepository, TagRepository tagRepository, ActivityRepository activityRepository, TeamRepository teamRepository, CourseRepository courseRepository) {
         this.modelMapper = modelMapper;
         this.dtoTransferHelper = dtoTransferHelper;
         this.recruitRepository = recruitRepository;
@@ -48,6 +50,7 @@ public class UserServiceImpl implements UserService {
         this.tagRepository = tagRepository;
         this.activityRepository = activityRepository;
         this.teamRepository = teamRepository;
+        this.courseRepository = courseRepository;
     }
 
     @Override
@@ -130,6 +133,21 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Object findAllWorkFlow(Integer userId) {
+        return null;
+    }
+
+    @Override
+    public void followCourse(Integer loginUserId, Integer courseId) {
+
+    }
+
+    @Override
+    public void unfollowCourse(Integer loginUserId, Integer courseId) {
+
+    }
+
+    @Override
     public List<UserDto> findAllFollowedUser(Integer userId) {
         return dtoTransferHelper.transferToListDto(userRepository.findUserFollower(userId));
     }
@@ -154,6 +172,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<ActivityDto> findAllFollowingCompetition(Integer userId) {
+        return null;
+    }
+
+    @Override
+    public List<ActivityDto> findAllFollowingCourse(Integer userId) {
+        return null;
+    }
+
+    @Override
     public List<RecruitDto> findAllRegisteredRecruit(Integer userId) {
         User user = userRepository.findOne(userId);
         if (user != null) {
@@ -161,8 +189,6 @@ public class UserServiceImpl implements UserService {
                     user.getApplyRecruits(), user,
                     (firstParam, secondParam) -> dtoTransferHelper.transferToRecruitDto((Recruit) firstParam, (User) secondParam)
             );
-
-
         } else {
             return null;
         }
@@ -258,11 +284,28 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public List<CourseDto> findJoinedCourse(User user) {
+        return dtoTransferHelper.transferToListDto(
+                courseRepository.findAllByMembersContains(user),
+                eachItem -> dtoTransferHelper.transferToCourseDto((Course) eachItem)
+        );
+    }
+
+    @Override
     public List<TeamDto> findCreatedTeam(User user) {
         return dtoTransferHelper.transferToListDto(
             teamRepository.findAllByLeader_Id(user.getId())
         );
     }
+
+    @Override
+    public List<TeamDto> findCreatedCourse(User user) {
+        return dtoTransferHelper.transferToListDto(
+                courseRepository.findAllByLecturer_Id(user.getId())
+        );
+    }
+
+    @Override
     @Transactional(propagation= Propagation.SUPPORTS)
     public User getOne(Integer id){
     	System.out.println("userid: "+id);

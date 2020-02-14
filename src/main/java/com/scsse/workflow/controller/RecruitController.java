@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
+import java.util.List;
 
 /**
  * @author Andrew Dong
@@ -24,6 +25,7 @@ import java.util.HashMap;
 public class RecruitController {
 
     private final UserUtil userUtil;
+
     private final RecruitService recruitService;
     private final UserService userService;
 
@@ -101,11 +103,14 @@ public class RecruitController {
      */
     @GetMapping("/recruit/appliedRecruit")
     public Result getAppliedRecruit() throws WrongUsageException {
-        return ResultUtil.success(
-                userService.findAllRegisteredRecruit(
-                        userUtil.getLoginUserId()
-                )
-        );
+        Integer uid =  userUtil.getLoginUserId();
+        List list = userService.findAllRegisteredRecruit(uid);
+        return ResultUtil.success(list);
+//        return ResultUtil.success(
+//                userService.findAllRegisteredRecruit(
+//                        userUtil.getLoginUserId()
+//                )
+//        );
     }
 
     /**
@@ -134,12 +139,12 @@ public class RecruitController {
      * @see RecruitDto
      */
     @PostMapping("/recruit")
-    public Result createOneRecruit(@RequestBody() Recruit recruit) {
+    public Result createOneRecruit(@RequestBody Recruit recruit) {
         return ResultUtil.success(recruitService.createRecruit(recruit));
     }
 
     @PutMapping("/recruit/{recruitId}")
-    public Result updateOneRecruit(@RequestBody() Recruit recruit, @PathVariable Integer recruitId) {
+    public Result updateOneRecruit(@RequestBody Recruit recruit, @PathVariable Integer recruitId) {
         recruit.setId(recruitId);
         return ResultUtil.success(recruitService.updateRecruit(recruit));
     }

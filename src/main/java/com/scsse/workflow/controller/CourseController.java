@@ -1,7 +1,7 @@
 package com.scsse.workflow.controller;
 
-import com.scsse.workflow.entity.model.Team;
-import com.scsse.workflow.service.TeamService;
+import com.scsse.workflow.entity.model.Course;
+import com.scsse.workflow.service.CourseService;
 import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
@@ -14,14 +14,14 @@ public class CourseController {
 
     private final UserUtil userUtil;
 
-    private final TeamService teamService;
+    private final CourseService courseService;
 
     private final UserService userService;
 
     @Autowired
-    public CourseController(UserUtil userUtil, TeamService teamService, UserService userService) {
+    public CourseController(UserUtil userUtil, CourseService CourseService, UserService userService) {
         this.userUtil = userUtil;
-        this.teamService = teamService;
+        this.courseService = CourseService;
         this.userService = userService;
     }
 
@@ -45,8 +45,34 @@ public class CourseController {
     @GetMapping("/course/{courseId}/members")
     public Result getColleague(@PathVariable Integer courseId) {
         return ResultUtil.success(
-                teamService.getTeamMembers(courseId)
+                courseService.getCourseMembers(courseId)
         );
     }
 
+    @GetMapping("/course/{courseId}")
+    public Result getCourse(@PathVariable Integer courseId) {
+        return ResultUtil.success(
+                courseService.getCourse(courseId)
+        );
+    }
+
+    @PutMapping("/course/{courseId}")
+    public Result updateCourse(@PathVariable Integer CourseId, @RequestBody Course course) throws Exception {
+        return ResultUtil.success(
+                courseService.updateCourse(course)
+        );
+    }
+
+    @PostMapping("/course")
+    public Result createCourse(@RequestBody Course course) {
+        return ResultUtil.success(
+                courseService.createCourse(course)
+        );
+    }
+
+    @DeleteMapping("/course/{courseId}")
+    public Result deleteCourse(@PathVariable Integer courseId) {
+        courseService.deleteCourse(courseId);
+        return ResultUtil.success();
+    }
 }

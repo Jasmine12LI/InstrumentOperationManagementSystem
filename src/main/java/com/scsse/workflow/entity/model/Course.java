@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import lombok.ToString;
 
 import javax.persistence.*;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -39,11 +40,38 @@ public class Course {
     private User lecturer;
 
     @ManyToOne
-    @JoinColumn(name = "activity_id")
-    private Activity activity;
+    @JoinColumn(name = "course_id")
+    private Course course;
 
     @OneToOne
     @JoinColumn(name = "team_id")
     private Team team;
 
+    @ManyToMany
+    @JoinTable(
+            name = "course_user",
+            joinColumns = @JoinColumn(name = "course_id"),
+            inverseJoinColumns = @JoinColumn(name = "user_id")
+    )
+    @JsonBackReference(value = "course.members")
+    private Set<User> members = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Course{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public Course(String courseName, Integer courseId, User lecturer, Team team) {
+        this.name = courseName;
+        this.id = courseId;
+        this.lecturer = lecturer;
+        this.team = team;
+    }
+
+    public Course(String courseName){
+        this.name = courseName;
+    }
 }

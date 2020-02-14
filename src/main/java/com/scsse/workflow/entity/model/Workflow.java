@@ -78,4 +78,12 @@ public class Workflow {
 //        return actionRecord;
 //    }
 
+    @Override
+    public String toString() {
+        return "Workflow{" +
+                "id=" + id +
+                ", content='" + content + '\'' +
+                ", createTime=" + createTime +
+                '}';
+    }
 }
