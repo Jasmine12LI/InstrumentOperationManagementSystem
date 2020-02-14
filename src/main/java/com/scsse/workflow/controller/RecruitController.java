@@ -94,6 +94,50 @@ public class RecruitController {
         return ResultUtil.success(recruitService.findUsersAppliedMyRecruits());
     }
 
+    /**
+     * 获取关注该应聘的所有用户
+     *
+     * @return List{UserDto}
+     * 例:
+     * url:
+     * GET /user/1/followedRecruit
+     */
+    @GetMapping("/recruit/{recruitId}/followUser")
+    public Result getFollowUser(@PathVariable Integer recruitId) {
+        return ResultUtil.success(
+                recruitService.findAllFollowerOfRecruit(recruitId)
+        );
+    }
+
+    /**
+     * 获取申请该应聘的所有用户
+     *
+     * @return List{UserDto}
+     * 例:
+     * url:
+     * GET /user/1/followedRecruit
+     */
+    @GetMapping("/recruit/{recruitId}/applyUser")
+    public Result getApplyUser(@PathVariable Integer recruitId) {
+        return ResultUtil.success(
+                recruitService.findAllApplicantOfRecruit(recruitId)
+        );
+    }
+
+    /**
+     * 获取成功申请该应聘的所有用户
+     *
+     * @return List{UserDto}
+     * 例:
+     * url:
+     * GET /user/1/followedRecruit
+     */
+    @GetMapping("/recruit/{recruitId}/participant")
+    public Result getSuccessApplyUser(@PathVariable Integer recruitId) {
+        return ResultUtil.success(
+                recruitService.findAllMemberOfRecruit(recruitId)
+        );
+    }
 
     /**
      * 获取<b>调用者</b>申请应聘的所有应聘
@@ -129,7 +173,7 @@ public class RecruitController {
     }
 
     /**
-     * 创建一条应聘
+     * 创建一条招聘
      *
      * @param recruit 招聘
      * @return RecruitListDto

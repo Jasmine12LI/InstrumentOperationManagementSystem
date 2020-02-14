@@ -34,9 +34,9 @@ public class Role {
 	@Column
 	private Boolean status;
 	
-	@ManyToMany(mappedBy = "roles")
-	@JsonBackReference(value = "role.users")
-	Set<User> users = new HashSet<>();
+//	@ManyToMany(mappedBy = "roles")
+//	@JsonBackReference(value = "role.users")
+//	Set<User> users = new HashSet<>();
 
 	@ManyToMany
 	@JsonBackReference(value = "role.accesses")

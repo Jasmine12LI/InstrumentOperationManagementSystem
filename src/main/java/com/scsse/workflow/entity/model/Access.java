@@ -28,9 +28,9 @@ public class Access {
 	@Column
 	private String title;
 
-	@ManyToMany(mappedBy = "accesses")
-	@JsonBackReference(value = "access.roles")
-	Set<Role> roles = new HashSet<>();
+//	@ManyToMany(mappedBy = "accesses")
+//	@JsonBackReference(value = "access.roles")
+//	Set<Role> roles = new HashSet<>();
 
 	@Override
 	public String toString() {

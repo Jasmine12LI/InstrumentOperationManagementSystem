@@ -9,5 +9,5 @@ import java.util.List;
 public interface CourseRepository extends JpaRepository<Course, Integer> {
 
     List<Course> findAllByLecturer_Id(Integer userId);
-    List<Course> findAllByMembersContains(User user);
+    List<Course> findAllByStudentsContains(User user);
 }

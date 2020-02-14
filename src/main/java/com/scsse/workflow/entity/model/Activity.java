@@ -78,7 +78,7 @@ public class Activity {
     private String phone;
 
     /**
-     * 比赛类型：个人赛（0）、团队赛（1）
+     * 比赛类型：个人赛（false）、团队赛（true）
      */
     @Column(name = "quantity_type")
     private Boolean quantityType;

@@ -54,7 +54,11 @@ public class Course {
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )
     @JsonBackReference(value = "course.members")
-    private Set<User> members = new HashSet<>();
+    private Set<User> students = new HashSet<>();
+
+    @ManyToMany(mappedBy = "followCourses")
+    @JsonBackReference(value = "followCourses.followers")
+    Set<User> followers = new HashSet<>();
 
     @Override
     public String toString() {

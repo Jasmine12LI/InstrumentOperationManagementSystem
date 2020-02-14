@@ -120,17 +120,20 @@ public class RecruitServiceImpl implements RecruitService {
     public void applyOneRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
         Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
-        user.getApplyRecruits().add(recruit);
-        userUtil.saveUser(user);
+        if(user!=null&&recruit!=null) {
+            user.getApplyRecruits().add(recruit);
+            userUtil.saveUser(user);
+        }
     }
 
     @Override
     public void cancelAppliedRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
         Recruit recruit = getOne(recruitId);
-        Recruit recruit1 = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
-        user.getApplyRecruits().remove(recruit);
-        userUtil.saveUser(user);
+        if(user!=null&&recruit!=null) {
+            user.getApplyRecruits().remove(recruit);
+            userUtil.saveUser(user);
+        }
     }
 
     @Override

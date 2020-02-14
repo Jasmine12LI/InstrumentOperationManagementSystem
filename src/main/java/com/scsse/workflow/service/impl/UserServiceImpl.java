@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -61,6 +62,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserDetailPage findUserDetail(Integer userId) {
         return dtoTransferHelper.transferToUserDetailPage(userRepository.findOne(userId));
+    }
+
+    @Override
+    public UserDto findUser(Integer userId) {
+        return dtoTransferHelper.transferToUserDto(userRepository.findOne(userId));
     }
 
     @Override
@@ -128,7 +134,7 @@ public class UserServiceImpl implements UserService {
         Set<Activity> activities = user.getFollowActivities();
         return dtoTransferHelper.transferToListDto(
                 activities,
-                activity -> dtoTransferHelper.transferToActivityDto((Activity) activity,user)
+                activity -> dtoTransferHelper.transferToActivityDto((Activity) activity, user)
         );
     }
 
@@ -154,7 +160,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> findAllFollowingUser(Integer userId) {
-        User user =  userRepository.findOne(userId);
+        User user = userRepository.findOne(userId);
         return dtoTransferHelper.transferToListDto(user.getFollowUsers());
     }
 
@@ -286,7 +292,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<CourseDto> findJoinedCourse(User user) {
         return dtoTransferHelper.transferToListDto(
-                courseRepository.findAllByMembersContains(user),
+                courseRepository.findAllByStudentsContains(user),
                 eachItem -> dtoTransferHelper.transferToCourseDto((Course) eachItem)
         );
     }
@@ -294,7 +300,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public List<TeamDto> findCreatedTeam(User user) {
         return dtoTransferHelper.transferToListDto(
-            teamRepository.findAllByLeader_Id(user.getId())
+                teamRepository.findAllByLeader_Id(user.getId())
         );
     }
 
@@ -306,9 +312,27 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    @Transactional(propagation= Propagation.SUPPORTS)
-    public User getOne(Integer id){
-    	System.out.println("userid: "+id);
+    public Set<Role> findRole(Integer userId) {
+        User user = userRepository.findOne(userId);
+        if (user != null)
+            return user.getRoles();
+        return null;
+    }
+
+    @Override
+    public Set<Access> findAccess(Integer userId) {
+        User user = userRepository.findOne(userId);
+        Set<Role> roles = findRole(userId);
+        Set<Access> accesses = new HashSet<>();
+        for(Role role:roles){
+            accesses.addAll(role.getAccesses());
+        }
+        return accesses;
+    }
+
+    @Transactional(propagation = Propagation.SUPPORTS)
+    public User getOne(Integer id) {
+        System.out.println("userid: " + id);
         return userRepository.findOne(id);
     }
 

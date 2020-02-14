@@ -18,6 +18,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,6 +78,15 @@ public class ActivityServiceImpl implements ActivityService {
     @Override
     public List<ActivityDto> findAllFinishedActivity() {
         List<Activity> activities = new ArrayList<>();
+        List<Activity> list =    activityRepository.findAll();
+        LocalDateTime current = LocalDateTime.now();
+        for(Activity activity:list){
+            LocalDateTime act = activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai"))
+                    .toLocalDateTime();
+            if(current.compareTo(act)>0){
+                System.out.println("true");
+            }
+        }
         activityRepository.findAll().stream()
                 // if the time now is greater than the activity time
                 .filter(activity -> LocalDate.now().compareTo

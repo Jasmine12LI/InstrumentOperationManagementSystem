@@ -1,6 +1,8 @@
 package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.*;
+import com.scsse.workflow.entity.model.Access;
+import com.scsse.workflow.entity.model.Role;
 import com.scsse.workflow.entity.model.Tag;
 import com.scsse.workflow.entity.model.User;
 
@@ -15,7 +17,7 @@ import java.util.Set;
 public interface UserService {
     User getOne(Integer id);
     List<UserDto> findAllUser();
-
+    UserDto findUser(Integer userId);
     UserDetailPage findUserDetail(Integer userId);
 
     UserDto createUser(User user);
@@ -144,4 +146,7 @@ public interface UserService {
     void followCourse(Integer loginUserId, Integer courseId);
 
     void unfollowCourse(Integer loginUserId, Integer courseId);
+    Set<Role> findRole(Integer userId);
+    Set<Access> findAccess(Integer userId);
+
 }

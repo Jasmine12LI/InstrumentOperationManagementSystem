@@ -12,5 +12,6 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class TeamDto {
+    private Integer teamId;
     private String teamName;
 }

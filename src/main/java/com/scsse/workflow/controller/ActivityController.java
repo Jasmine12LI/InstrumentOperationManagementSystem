@@ -1,13 +1,12 @@
 package com.scsse.workflow.controller;
 
+import com.scsse.workflow.entity.model.Activity;
 import com.scsse.workflow.service.ActivityService;
+import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
 import com.scsse.workflow.util.result.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author Alfred Fu
@@ -19,9 +18,12 @@ public class ActivityController {
 
     private final ActivityService activityService;
 
+    private final UserUtil userUtil;
+
     @Autowired
-    public ActivityController(ActivityService activityService) {
+    public ActivityController(ActivityService activityService, UserUtil userUtil) {
         this.activityService = activityService;
+        this.userUtil = userUtil;
     }
 
     /**
@@ -31,7 +33,7 @@ public class ActivityController {
      *             fresh：未到报名截止时间
      *             expire：超过报名截止时间，但活动尚未开始
      *             finish：活动已经结束
-     * @return List{Activity}
+     * @return List{ActivityDto}
      */
     @GetMapping("/activity/all")
     public Result findAllActivity(@RequestParam(name = "type", required = false, defaultValue = "normal") String type) {
@@ -49,10 +51,20 @@ public class ActivityController {
     }
 
     /**
+     * 获取关于该活动的所有招聘
+     * @param  activityId
+     * @return List{RecruitDto}
+     */
+    @GetMapping("/activity/{activityId}/recruit")
+    public Result findRecruitOfActivity(@PathVariable Integer activityId) {
+        return ResultUtil.success(activityService.findAllRecruitOfActivity(activityId));
+    }
+
+    /**
      * 获取某个活动的具体信息
      *
      * @param activityId 活动Id
-     * @return Activity
+     * @return ActivityDto
      * <p>
      * e.g.
      * GET /activity/1
@@ -60,5 +72,34 @@ public class ActivityController {
     @GetMapping("/activity/{activityId}")
     public Result getActivityDetail(@PathVariable Integer activityId) {
         return ResultUtil.success(activityService.findActivityById(activityId));
+    }
+
+    /**
+     * 创建一个活动
+     *
+     * @param activity 活动
+     * @return Activity
+     * 例:
+     * url:
+     * /recruit
+     * @see Activity
+     */
+    @PostMapping("/activity")
+    public Result createOneActivity(@RequestBody Activity activity) {
+        activity.setPromoter(userUtil.getLoginUser());
+        activity.setQuantityType(true);
+        return ResultUtil.success(activityService.createActivity(activity));
+    }
+
+    @PutMapping("/activity/{activityId}")
+    public Result updateOneActivity(@RequestBody Activity activity, @PathVariable Integer activityId) {
+        activity.setId(activityId);
+        return ResultUtil.success(activityService.updateActivity(activity));
+    }
+
+    @DeleteMapping("/activity/{activityId}")
+    public Result deleteOneActivity(@PathVariable Integer activityId) {
+        activityService.deleteActivityById(activityId);
+        return ResultUtil.success();
     }
 }
