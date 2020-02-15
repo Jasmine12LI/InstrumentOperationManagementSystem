@@ -125,7 +125,7 @@ public class Activity {
                 ", name='" + name + '\'' +
                 '}';
     }
-/*
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -142,5 +142,5 @@ public class Activity {
     @Override
     public int hashCode() {
         return Objects.hash(getId(), getName(), getActTime(), getLocation(), getDescription(), getEndTime());
-    }*/
+    }
 }

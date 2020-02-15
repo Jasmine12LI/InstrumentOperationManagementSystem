@@ -156,21 +156,6 @@ public class UserController {
         );
     }
 
-    /**
-     * 获取用户的个人工作进展
-     *
-     * @param userId 调用者的openid
-     * @return List{Activity}
-     * <p>
-     * e.g.
-     * GET /user/1/followedCourse
-     */
-    @GetMapping("/user/{userId}/workFlow")
-    public Result getWorkProgress(@PathVariable() Integer userId) {
-        return ResultUtil.success(
-                userService.findAllWorkFlow(userId)
-        );
-    }
 
     /**
      * 关注一个user

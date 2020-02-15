@@ -130,9 +130,9 @@ public class User {
     @JsonBackReference(value = "user.replys")
     @JoinTable(name = "reply_liker",joinColumns = @JoinColumn(name = "liker_id"),inverseJoinColumns = @JoinColumn(name = "reply_id"))
     private Set<Reply> replys = new HashSet<>();
-    
-    
-    @ManyToMany(mappedBy = "members")
+
+
+    @ManyToMany(mappedBy = "members",fetch=FetchType.EAGER)
     @JsonBackReference(value = "user.joinedTeam")
     private Set<Team> joinedTeam = new HashSet<>();
     
@@ -202,7 +202,7 @@ public class User {
         this.openId = openid;
     }
 
-/*
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -224,7 +224,7 @@ public class User {
         return Objects.hash(getId(), getName(), getStuNumber(), getStuNumber(), getPhone(), getEmail(),
         		getSpecialty(), getResume(), getOpenId());
     }
-*/
+
 
     @Override
     public String toString() {

@@ -146,6 +146,8 @@ public class DtoTransferHelper {
     public TeamDto transferToTeamDto(Team team) {
         TeamDto result = new TeamDto();
         modelMapper.map(team, result);
+//        result.setLeaderName(team.getName());
+        result.setMemberNum(team.getMembers().size());
         return result;
     }
 

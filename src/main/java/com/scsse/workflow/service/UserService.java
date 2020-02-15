@@ -1,10 +1,7 @@
 package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.*;
-import com.scsse.workflow.entity.model.Access;
-import com.scsse.workflow.entity.model.Role;
-import com.scsse.workflow.entity.model.Tag;
-import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.entity.model.*;
 
 import java.util.List;
 import java.util.Set;
@@ -141,9 +138,7 @@ public interface UserService {
 
     List<CourseDto> findJoinedCourse(User user);
 
-    Object findAllFollowedActivity(Integer userId);
-
-    Object findAllWorkFlow(Integer userId);
+    List<ActivityDto> findAllFollowedActivity(Integer userId);
 
     void followCourse(Integer loginUserId, Integer courseId);
 

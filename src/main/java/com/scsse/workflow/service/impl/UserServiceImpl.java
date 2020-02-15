@@ -43,7 +43,10 @@ public class UserServiceImpl implements UserService {
     private final CourseRepository courseRepository;
 
     @Autowired
-    public UserServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper, RecruitRepository recruitRepository, UserRepository userRepository, TagRepository tagRepository, ActivityRepository activityRepository, TeamRepository teamRepository, CourseRepository courseRepository) {
+    public UserServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper,
+                           RecruitRepository recruitRepository, UserRepository userRepository,
+                           TagRepository tagRepository, ActivityRepository activityRepository,
+                           TeamRepository teamRepository, CourseRepository courseRepository) {
         this.modelMapper = modelMapper;
         this.dtoTransferHelper = dtoTransferHelper;
         this.recruitRepository = recruitRepository;
@@ -138,10 +141,6 @@ public class UserServiceImpl implements UserService {
         );
     }
 
-    @Override
-    public Object findAllWorkFlow(Integer userId) {
-        return null;
-    }
 
     @Override
     public void followCourse(Integer loginUserId, Integer courseId) {
@@ -298,6 +297,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<CourseDto> findJoinedCourse(User user) {
+//        return null;
         return dtoTransferHelper.transferToListDto(
                 courseRepository.findAllByStudentsContains(user),
                 eachItem -> dtoTransferHelper.transferToCourseDto((Course) eachItem)

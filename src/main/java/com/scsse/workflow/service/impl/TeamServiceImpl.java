@@ -5,11 +5,15 @@ import com.scsse.workflow.entity.dto.TeamDto;
 import com.scsse.workflow.entity.dto.UserDto;
 import com.scsse.workflow.entity.model.Team;
 import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.entity.model.Workflow;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.TeamRepository;
+import com.scsse.workflow.repository.WorkflowRepository;
 import com.scsse.workflow.service.TeamService;
 import com.scsse.workflow.util.dao.DtoTransferHelper;
 import com.scsse.workflow.util.dao.UserUtil;
+import org.hibernate.Criteria;
+import org.springframework.data.domain.*;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -54,6 +58,11 @@ public class TeamServiceImpl implements TeamService {
     }
 
     @Override
+    public Team findTeam(Integer teamId){
+        return teamRepository.findOne(teamId);
+    }
+
+    @Override
     public TeamDto createTeam(Team team) {
         User loginUser = userUtil.getLoginUser();
         team.setLeader(loginUser);
@@ -88,4 +97,6 @@ public class TeamServiceImpl implements TeamService {
         } else
             return new ArrayList<>();
     }
+
+
 }

@@ -15,5 +15,6 @@ public class TeamDto {
     private Integer teamId;
     private String teamName;
     private String leaderName;
-    private Integer teamSize;
+    private Integer memberNum;
+    private String activityName;
 }

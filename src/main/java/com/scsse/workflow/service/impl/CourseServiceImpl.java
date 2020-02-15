@@ -73,6 +73,7 @@ public class CourseServiceImpl implements CourseService {
 
     @Override
     public List<UserDto> getCourseMembers(Integer courseId) {
+//        return null;
         Course result = courseRepository.findOne(courseId);
         if (result!=null) {
             return dtoTransferHelper.transferToListDto(

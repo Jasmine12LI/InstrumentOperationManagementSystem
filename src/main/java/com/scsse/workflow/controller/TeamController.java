@@ -75,6 +75,7 @@ public class TeamController {
 
     @PutMapping("/team/{teamId}")
     public Result updateTeam(@PathVariable Integer teamId, @RequestBody Team team) throws Exception {
+        team.setId(teamId);
         return ResultUtil.success(
                 teamService.updateTeam(team)
         );
@@ -92,4 +93,6 @@ public class TeamController {
         teamService.deleteTeam(teamId);
         return ResultUtil.success();
     }
+
+
 }
