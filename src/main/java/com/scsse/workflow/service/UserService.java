@@ -135,7 +135,7 @@ public interface UserService {
 
     List<TeamDto> findCreatedTeam(User user);
 
-    List<TeamDto> findAllTeams();
+    List<TeamDto> findAllTeams(User user);
 
     public List<TeamDto> findCreatedCourse(User user);
 

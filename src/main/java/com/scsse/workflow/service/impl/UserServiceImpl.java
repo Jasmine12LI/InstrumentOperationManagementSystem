@@ -290,7 +290,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<TeamDto> findAllTeams(){
+    public List<TeamDto> findAllTeams(User user){
         return dtoTransferHelper.transferToListDto(
                 tagRepository.findAll()
         );
