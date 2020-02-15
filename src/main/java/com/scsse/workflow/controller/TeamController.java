@@ -53,10 +53,16 @@ public class TeamController {
         );
     }
 
+    /**
+     * 获取所有团队
+     *
+     *
+     * @return List{TeamDto}
+     */
     @GetMapping("/team/all")
     public Result getAllTeam(){
         return ResultUtil.success(
-                userService.findAllTeams()
+                userService.findAllTeams(userUtil.getLoginUser())
         );
     }
 
