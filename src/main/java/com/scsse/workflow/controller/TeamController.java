@@ -53,6 +53,13 @@ public class TeamController {
         );
     }
 
+    @GetMapping("/team/all")
+    public Result getAllTeam(){
+        return ResultUtil.success(
+                userService.findAllTeams()
+        );
+    }
+
     @GetMapping("/team/{teamId}")
     public Result getTeam(@PathVariable Integer teamId) {
         return ResultUtil.success(

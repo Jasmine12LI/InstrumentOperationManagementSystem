@@ -135,6 +135,8 @@ public interface UserService {
 
     List<TeamDto> findCreatedTeam(User user);
 
+    List<TeamDto> findAllTeams();
+
     public List<TeamDto> findCreatedCourse(User user);
 
     List<CourseDto> findJoinedCourse(User user);
@@ -146,7 +148,9 @@ public interface UserService {
     void followCourse(Integer loginUserId, Integer courseId);
 
     void unfollowCourse(Integer loginUserId, Integer courseId);
+
     Set<Role> findRole(Integer userId);
+
     Set<Access> findAccess(Integer userId);
 
 }
