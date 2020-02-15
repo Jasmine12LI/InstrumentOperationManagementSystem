@@ -88,8 +88,9 @@ public class WorkflowController {
     }
 
     @PutMapping("/workflow/{workflowId}")
-    public Result updateTeam(@PathVariable Integer workflowId, @RequestBody Workflow workflow) throws Exception {
+    public Result updateWorkflow(@PathVariable Integer workflowId, @RequestBody Workflow workflow) throws Exception {
         workflow.setId(workflowId);
+        workflow.setCreateTime(null);
         return ResultUtil.success(
                 workflowService.updateWorkflow(workflow)
         );

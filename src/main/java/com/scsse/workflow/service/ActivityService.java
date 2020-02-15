@@ -14,13 +14,13 @@ import java.util.Set;
  */
 public interface ActivityService {
 
-    List<ActivityDto> findAllActivity();
+    List<ActivityDto> findAllActivity(String type);
 
-    List<ActivityDto> findAllExpiredActivity();
+    List<ActivityDto> findAllExpiredActivity(String type);
 
-    List<ActivityDto> findAllFinishedActivity();
+    List<ActivityDto> findAllFinishedActivity(String type);
 
-    List<ActivityDto> findAllFreshActivity();
+    List<ActivityDto> findAllFreshActivity(String type);
 
     ActivityDto findActivityById(Integer activityId);
 

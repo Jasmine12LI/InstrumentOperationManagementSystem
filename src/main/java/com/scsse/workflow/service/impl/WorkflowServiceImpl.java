@@ -4,6 +4,7 @@ package com.scsse.workflow.service.impl;
 import com.scsse.workflow.entity.model.Workflow;
 import com.scsse.workflow.repository.WorkflowRepository;
 import com.scsse.workflow.service.WorkflowService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -19,9 +20,11 @@ import java.util.List;
 public class WorkflowServiceImpl implements WorkflowService {
 
     private final WorkflowRepository workflowRepository;
+    private final ModelMapper modelMapper;
 
     @Autowired
-    public WorkflowServiceImpl(WorkflowRepository workflowRepository) {
+    public WorkflowServiceImpl(ModelMapper modelMapper,WorkflowRepository workflowRepository) {
+        this.modelMapper = modelMapper;
         this.workflowRepository = workflowRepository;
     }
 
@@ -52,7 +55,10 @@ public class WorkflowServiceImpl implements WorkflowService {
 
     @Override
     public Workflow updateWorkflow(Workflow workflow) {
-        return workflowRepository.save(workflow);
+        Integer workflowId = workflow.getId();
+        Workflow oldWorkflow = workflowRepository.findOne(workflowId);
+        modelMapper.map(workflow, oldWorkflow);
+        return workflowRepository.save(oldWorkflow);
     }
 
     @Override
