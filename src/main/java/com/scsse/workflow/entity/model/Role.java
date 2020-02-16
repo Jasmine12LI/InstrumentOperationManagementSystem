@@ -38,7 +38,7 @@ public class Role {
 //	@JsonBackReference(value = "role.users")
 //	Set<User> users = new HashSet<>();
 
-	@ManyToMany
+	@ManyToMany(fetch = FetchType.EAGER)
 	@JsonBackReference(value = "role.accesses")
 	@JoinTable(name = "role_access", joinColumns = @JoinColumn(name = "role_id"), inverseJoinColumns = @JoinColumn(name = "access_id"))
 	private Set<Access> accesses = new HashSet<>();

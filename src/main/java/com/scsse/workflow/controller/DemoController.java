@@ -5,9 +5,12 @@ import java.util.Set;
 
 import com.scsse.workflow.entity.model.*;
 import com.scsse.workflow.service.*;
+import com.scsse.workflow.util.result.Result;
+import com.scsse.workflow.util.result.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
@@ -63,6 +66,43 @@ public class DemoController {
     public Role showRole(Integer id) throws Exception {
 
         return roleService.findRoleById(1);
+    }
+
+    @GetMapping(value = "/get/role/access")
+    @ResponseBody
+    public Set<Access> showRoleAccess(Integer id) throws Exception {
+
+        return roleService.findAccessByRoleId(1);
+    }
+
+    @GetMapping(value = "/add/role/access/{accessId}")
+    @ResponseBody
+    public Result addRoleAccess(@PathVariable Integer accessId) throws Exception {
+
+         roleService.addAccess(1,accessId);
+         return ResultUtil.success();
+    }
+    @GetMapping(value = "/remove/role/access/{accessId}")
+    @ResponseBody
+    public Result removeRoleAccess(@PathVariable Integer accessId) throws Exception {
+
+        roleService.removeAccess(1,accessId);
+        return ResultUtil.success();
+    }
+
+    @GetMapping(value = "/add/user/role/{roleId}")
+    @ResponseBody
+    public Result addUserRole(@PathVariable Integer roleId) throws Exception {
+
+        userService.addRole(1,roleId);
+        return ResultUtil.success();
+    }
+    @GetMapping(value = "/remove/user/role/{roleId}")
+    @ResponseBody
+    public Result removeUserRole(@PathVariable Integer roleId) throws Exception {
+
+        userService.removeRole(1,roleId);
+        return ResultUtil.success();
     }
 
     @GetMapping(value = "/get/access")

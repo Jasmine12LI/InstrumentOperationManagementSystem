@@ -41,12 +41,15 @@ public class UserServiceImpl implements UserService {
     private final TeamRepository teamRepository;
 
     private final CourseRepository courseRepository;
+    private final RoleRepository roleRepository;
+
 
     @Autowired
     public UserServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper,
                            RecruitRepository recruitRepository, UserRepository userRepository,
                            TagRepository tagRepository, ActivityRepository activityRepository,
-                           TeamRepository teamRepository, CourseRepository courseRepository) {
+                           TeamRepository teamRepository, CourseRepository courseRepository,
+                           RoleRepository roleRepository) {
         this.modelMapper = modelMapper;
         this.dtoTransferHelper = dtoTransferHelper;
         this.recruitRepository = recruitRepository;
@@ -55,6 +58,7 @@ public class UserServiceImpl implements UserService {
         this.activityRepository = activityRepository;
         this.teamRepository = teamRepository;
         this.courseRepository = courseRepository;
+        this.roleRepository = roleRepository;
     }
 
     @Override
@@ -289,7 +293,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public List<TeamDto> findAllTeams(User user){
+    public List<TeamDto> findAllTeams(User user) {
         return dtoTransferHelper.transferToListDto(
                 teamRepository.findAll()
         );
@@ -338,10 +342,30 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findOne(userId);
         Set<Role> roles = findRole(userId);
         Set<Access> accesses = new HashSet<>();
-        for(Role role:roles){
+        for (Role role : roles) {
             accesses.addAll(role.getAccesses());
         }
         return accesses;
+    }
+
+    @Override
+    public void addRole(Integer userId, Integer roleId) {
+        Role role = roleRepository.findOne(roleId);
+        User user = userRepository.findOne(userId);
+        if (role != null) {
+            user.getRoles().add(role);
+            userRepository.save(user);
+        }
+    }
+
+    @Override
+    public void removeRole(Integer userId, Integer roleId) {
+        Role role = roleRepository.findOne(roleId);
+        User user = userRepository.findOne(userId);
+        if (role != null&&user.getRoles().contains(role)) {
+            user.getRoles().remove(role);
+            userRepository.save(user);
+        }
     }
 
     @Transactional(propagation = Propagation.SUPPORTS)

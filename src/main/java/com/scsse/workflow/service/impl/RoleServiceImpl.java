@@ -3,10 +3,7 @@ package com.scsse.workflow.service.impl;
 import com.scsse.workflow.entity.dto.ActivityDto;
 import com.scsse.workflow.entity.dto.RecruitDto;
 import com.scsse.workflow.entity.model.*;
-import com.scsse.workflow.repository.ActivityRepository;
-import com.scsse.workflow.repository.RecruitRepository;
-import com.scsse.workflow.repository.RoleRepository;
-import com.scsse.workflow.repository.TagRepository;
+import com.scsse.workflow.repository.*;
 import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.service.RoleService;
 import com.scsse.workflow.util.dao.DtoTransferHelper;
@@ -20,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -32,10 +30,12 @@ import java.util.Set;
 public class RoleServiceImpl implements RoleService {
 
     private final RoleRepository roleRepository;
+    private final AccessRepository accessRepository;
 
     @Autowired
-    public RoleServiceImpl(RoleRepository roleRepository) {
+    public RoleServiceImpl(RoleRepository roleRepository, AccessRepository accessRepository) {
         this.roleRepository = roleRepository;
+        this.accessRepository = accessRepository;
     }
 
     @Override
@@ -63,4 +63,32 @@ public class RoleServiceImpl implements RoleService {
         roleRepository.delete(roleId);
     }
 
+    @Override
+    public Set<Access> findAccessByRoleId(Integer roleId) {
+        Set<Access> set = new HashSet<>();
+        Role role = roleRepository.findOne(roleId);
+        if (role != null)
+            set = role.getAccesses();
+        return set;
+    }
+
+    @Override
+    public void addAccess(Integer roleId, Integer accessId) {
+        Role role = roleRepository.findOne(roleId);
+        Access access = accessRepository.findOne(accessId);
+        if (access != null) {
+            role.getAccesses().add(access);
+            roleRepository.save(role);
+        }
+    }
+
+    @Override
+    public void removeAccess(Integer roleId, Integer accessId) {
+        Role role = roleRepository.findOne(roleId);
+        Access access = accessRepository.findOne(accessId);
+        if (access != null&&role.getAccesses().contains(access)) {
+            role.getAccesses().remove(access);
+            roleRepository.save(role);
+        }
+    }
 }

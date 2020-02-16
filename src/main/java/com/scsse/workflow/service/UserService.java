@@ -149,5 +149,7 @@ public interface UserService {
     Set<Role> findRole(Integer userId);
 
     Set<Access> findAccess(Integer userId);
+    void addRole(Integer userId,Integer roleId);
+    void removeRole(Integer userId,Integer roleId);
 
 }
