@@ -8,6 +8,8 @@ import com.scsse.workflow.util.result.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
+
 /**
  * @author Alfred Fu
  * Created on 2019-03-07 20:48
@@ -39,20 +41,39 @@ public class ActivityController {
     public Result findAllActivity(@RequestParam(name = "type", required = false, defaultValue = "normal") String type) {
         switch (type) {
             case "fresh":
-                return ResultUtil.success(activityService.findAllFreshActivity());
+                return ResultUtil.success(activityService.findAllFreshActivity("activity"));
             case "expire":
-                return ResultUtil.success(activityService.findAllExpiredActivity());
+                return ResultUtil.success(activityService.findAllExpiredActivity("activity"));
             case "finish":
-                return ResultUtil.success(activityService.findAllFinishedActivity());
+                return ResultUtil.success(activityService.findAllFinishedActivity("activity"));
             default:
-                return ResultUtil.success(activityService.findAllActivity());
+                return ResultUtil.success(activityService.findAllActivity("activity"));
         }
 
     }
 
     /**
+     * 获取所有比赛
+     */
+    @GetMapping("/activity/all/competition")
+    public Result findAllCompetition(@RequestParam(name = "type", required = false, defaultValue = "normal") String type) {
+        switch (type) {
+            case "fresh":
+                return ResultUtil.success(activityService.findAllFreshActivity("competition"));
+            case "expire":
+                return ResultUtil.success(activityService.findAllExpiredActivity("competition"));
+            case "finish":
+                return ResultUtil.success(activityService.findAllFinishedActivity("competition"));
+            default:
+                return ResultUtil.success(activityService.findAllActivity("competition"));
+        }
+    }
+
+
+    /**
      * 获取关于该活动的所有招聘
-     * @param  activityId
+     *
+     * @param activityId
      * @return List{RecruitDto}
      */
     @GetMapping("/activity/{activityId}/recruit")
@@ -87,7 +108,8 @@ public class ActivityController {
     @PostMapping("/activity")
     public Result createOneActivity(@RequestBody Activity activity) {
         activity.setPromoter(userUtil.getLoginUser());
-        activity.setQuantityType(true);
+//        activity.setQuantityType(true);
+        activity.setPublishTime(new Date());
         return ResultUtil.success(activityService.createActivity(activity));
     }
 

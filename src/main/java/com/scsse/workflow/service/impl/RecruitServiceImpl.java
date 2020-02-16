@@ -141,6 +141,7 @@ public class RecruitServiceImpl implements RecruitService {
         Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
         if (recruit != null && user != null) {
+            recruit.setRecruitRegisteredNumber(recruit.getRecruitWillingNumber()+1);
             recruit.getParticipants().add(user);
             user.getApplyRecruits().remove(recruit);
             recruitRepository.save(recruit);
@@ -153,6 +154,7 @@ public class RecruitServiceImpl implements RecruitService {
         User user = userUtil.getUserByUserId(userId);
 
         if (recruit != null && user != null) {
+            recruit.setRecruitRegisteredNumber(recruit.getRecruitWillingNumber()-1);
             recruit.getParticipants().remove(user);
             user.getApplyRecruits().add(recruit);
             recruitRepository.save(recruit);
@@ -209,7 +211,7 @@ public class RecruitServiceImpl implements RecruitService {
     @Override
     public void finishRecruit(Integer recruitId) {
         Recruit recruit = recruitRepository.findOne(recruitId);
-        recruit.setRecruitState("已完成");
+        recruit.setRecruitState(finish);
 
         Team team = recruit.getTeam();
         team.getMembers().addAll(recruit.getParticipants());
@@ -230,6 +232,10 @@ public class RecruitServiceImpl implements RecruitService {
 
         );
         return result;
+    }
+    @Override
+    public Recruit findRecruit(Integer recruitId){
+        return  recruitRepository.findOne(recruitId);
     }
 
     @Override

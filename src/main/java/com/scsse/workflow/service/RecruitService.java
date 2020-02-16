@@ -20,11 +20,15 @@ import java.util.Set;
 @Service
 public interface RecruitService {
 
+    public static final String going = "going";
+    public static final String finish = "finish";
+
     List<RecruitDto> findPaginationRecruit(Integer pageNum, Integer pageSize);
 
     List<RecruitDto> findPaginationRecruitWithCriteria(Integer pageNum, Integer pageSize, final HashMap<Integer, Pair<String, String>> queryParam);
 
     RecruitDto findRecruitById(Integer recruitId);
+    Recruit findRecruit(Integer recruitId);
 
     RecruitDto createRecruit(Recruit recruit);
 

@@ -55,14 +55,26 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDto> findAllActivity() {
-        return dtoTransferHelper.transferToListDto(activityRepository.findAll(), eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
+    public List<ActivityDto> findAllActivity(String type) {
+        List<Activity> list = new ArrayList<>();
+        if(type.equals("competition")){
+            list = activityRepository.findByActivityType("competition");
+        }else{
+            list = activityRepository.findAll();
+        }
+        return dtoTransferHelper.transferToListDto(list, eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
     }
 
     @Override
-    public List<ActivityDto> findAllExpiredActivity() {
+    public List<ActivityDto> findAllExpiredActivity(String type) {
         List<Activity> activities = new ArrayList<>();
-        activityRepository.findAll().stream()
+        List<Activity> list = new ArrayList<>();
+        if(type.equals("competition")){
+            list = activityRepository.findByActivityType("competition");
+        }else{
+            list = activityRepository.findAll();
+        }
+        list.stream()
                 // if the time now is greater than the signUpDeadline
                 .filter(activity -> LocalDate.now().compareTo
                         (activity.getEndTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
@@ -76,18 +88,15 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDto> findAllFinishedActivity() {
+    public List<ActivityDto> findAllFinishedActivity(String type) {
         List<Activity> activities = new ArrayList<>();
-        List<Activity> list =    activityRepository.findAll();
-        LocalDateTime current = LocalDateTime.now();
-        for(Activity activity:list){
-            LocalDateTime act = activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai"))
-                    .toLocalDateTime();
-            if(current.compareTo(act)>0){
-                System.out.println("true");
-            }
+        List<Activity> list = new ArrayList<>();
+        if(type.equals("competition")){
+            list = activityRepository.findByActivityType("competition");
+        }else{
+            list = activityRepository.findAll();
         }
-        activityRepository.findAll().stream()
+        list.stream()
                 // if the time now is greater than the activity time
                 .filter(activity -> LocalDate.now().compareTo
                         (activity.getActTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).
@@ -98,9 +107,15 @@ public class ActivityServiceImpl implements ActivityService {
     }
 
     @Override
-    public List<ActivityDto> findAllFreshActivity() {
+    public List<ActivityDto> findAllFreshActivity(String type) {
         List<Activity> activities = new ArrayList<>();
-        activityRepository.findAll().stream()
+        List<Activity> list = new ArrayList<>();
+        if(type.equals("competition")){
+            list = activityRepository.findByActivityType("competition");
+        }else{
+            list = activityRepository.findAll();
+        }
+        list.stream()
                 // if the time now is less than the signUpDeadline
                 .filter(activity -> LocalDate.now().compareTo
                         (activity.getEndTime().toInstant().atZone(ZoneId.of("Asia/Shanghai")).

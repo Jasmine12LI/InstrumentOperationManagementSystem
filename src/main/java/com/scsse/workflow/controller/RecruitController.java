@@ -2,9 +2,12 @@ package com.scsse.workflow.controller;
 
 import com.scsse.workflow.constant.PredicateType;
 import com.scsse.workflow.entity.dto.RecruitDto;
+import com.scsse.workflow.entity.model.Activity;
 import com.scsse.workflow.entity.model.Recruit;
 import com.scsse.workflow.handler.WrongUsageException;
+import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.service.RecruitService;
+import com.scsse.workflow.service.TeamService;
 import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.container.Pair;
 import com.scsse.workflow.util.dao.UserUtil;
@@ -14,6 +17,7 @@ import com.scsse.workflow.util.result.ResultUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -27,13 +31,18 @@ public class RecruitController {
     private final UserUtil userUtil;
 
     private final RecruitService recruitService;
+    private final ActivityService activityService;
     private final UserService userService;
+    private final TeamService teamService;
 
     @Autowired
-    public RecruitController(UserUtil userUtil, RecruitService recruitService, UserService userService) {
+    public RecruitController(UserUtil userUtil, RecruitService recruitService, ActivityService activityService,
+                             UserService userService, TeamService teamService) {
         this.userUtil = userUtil;
         this.recruitService = recruitService;
+        this.activityService = activityService;
         this.userService = userService;
+        this.teamService = teamService;
     }
 
 
@@ -179,17 +188,24 @@ public class RecruitController {
      * @return RecruitListDto
      * 例:
      * url:
-     * /recruit
+     * /recruit/1?teamId=2
      * @see RecruitDto
      */
-    @PostMapping("/recruit")
-    public Result createOneRecruit(@RequestBody Recruit recruit) {
+    @PostMapping("/recruit/{activityId}")
+    public Result createOneRecruit(@RequestBody Recruit recruit, @PathVariable Integer activityId,
+                                   @RequestParam(value = "teamId", required = false) Integer teamId) {
+        recruit.setCreator(userUtil.getLoginUser());
+        recruit.setRecruitState(recruitService.going);
+        recruit.setActivity(activityService.findActivityById(activityId));
+        recruit.setCreateTime(new Date());
+        recruit.setTeam(teamService.findTeam(teamId));
         return ResultUtil.success(recruitService.createRecruit(recruit));
     }
 
     @PutMapping("/recruit/{recruitId}")
     public Result updateOneRecruit(@RequestBody Recruit recruit, @PathVariable Integer recruitId) {
         recruit.setId(recruitId);
+        recruit.setCreateTime(null);
         return ResultUtil.success(recruitService.updateRecruit(recruit));
     }
 
@@ -209,6 +225,10 @@ public class RecruitController {
     @PutMapping("/recruit/{recruitId}/user/{userId}")
     public Result applyUser(@PathVariable Integer userId, @PathVariable Integer recruitId) throws WrongUsageException {
         recruitService.addMember(userId,recruitId);
+        Recruit recruit = recruitService.findRecruit(recruitId);
+        if(recruit.getRecruitRegisteredNumber()==recruit.getRecruitWillingNumber()){
+            recruitService.finishRecruit(recruitId);
+        }
         return ResultUtil.success();
     }
 
