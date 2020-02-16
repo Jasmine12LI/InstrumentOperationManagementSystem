@@ -64,7 +64,10 @@ public class ActivityServiceImpl implements ActivityService {
         }
         return dtoTransferHelper.transferToListDto(list, eachItem -> dtoTransferHelper.transferToActivityDto((Activity) eachItem,userUtil.getLoginUser()));
     }
-
+    @Override
+    public Activity findActivity(Integer activityId) {
+        return activityRepository.findOne(activityId);
+    }
     @Override
     public List<ActivityDto> findAllExpiredActivity(String type) {
         List<Activity> activities = new ArrayList<>();

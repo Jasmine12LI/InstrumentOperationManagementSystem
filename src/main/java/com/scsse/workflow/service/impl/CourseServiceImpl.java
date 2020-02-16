@@ -7,6 +7,7 @@ import com.scsse.workflow.entity.model.Course;
 import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.CourseRepository;
+import com.scsse.workflow.repository.TeamRepository;
 import com.scsse.workflow.service.CourseService;
 import com.scsse.workflow.util.dao.DtoTransferHelper;
 import com.scsse.workflow.util.dao.UserUtil;
@@ -22,22 +23,22 @@ import java.util.List;
 @Transactional
 public class CourseServiceImpl implements CourseService {
     private final CourseRepository courseRepository;
+    private final TeamRepository teamRepository;
 
     private final DtoTransferHelper dtoTransferHelper;
 
     private final UserUtil userUtil;
 
     private final ModelMapper modelMapper;
-
     @Autowired
     public CourseServiceImpl(CourseRepository courseRepository, DtoTransferHelper dtoTransferHelper,
-                           UserUtil userUtil, ModelMapper modelMapper) {
+                             UserUtil userUtil, ModelMapper modelMapper,TeamRepository teamRepository) {
         this.courseRepository = courseRepository;
         this.dtoTransferHelper = dtoTransferHelper;
         this.userUtil = userUtil;
         this.modelMapper = modelMapper;
+        this.teamRepository = teamRepository;
     }
-
     @Override
     public CourseDto getCourse(Integer courseId) {
         Course result = courseRepository.findOne(courseId);
@@ -56,6 +57,7 @@ public class CourseServiceImpl implements CourseService {
     public CourseDto createCourse(Course course) {
         User loginUser = userUtil.getLoginUser();
         course.setLecturer(loginUser);
+        course.setTeam(teamRepository.findOne(1));
         course.getStudents().add(loginUser);
         return dtoTransferHelper.transferToCourseDto(courseRepository.save(course));
     }

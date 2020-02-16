@@ -37,4 +37,6 @@ public interface ActivityService {
     void bindTagToActivity(Integer activityId, Integer tagId);
 
     void unBindTagToActivity(Integer activityId, Integer tagId);
+    Activity findActivity(Integer activityId);
+
 }

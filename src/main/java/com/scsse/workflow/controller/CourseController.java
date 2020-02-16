@@ -1,6 +1,7 @@
 package com.scsse.workflow.controller;
 
 import com.scsse.workflow.entity.model.Course;
+import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.service.CourseService;
 import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;
@@ -17,12 +18,15 @@ public class CourseController {
     private final CourseService courseService;
 
     private final UserService userService;
+    private final ActivityService activityService;
 
     @Autowired
-    public CourseController(UserUtil userUtil, CourseService CourseService, UserService userService) {
+    public CourseController(UserUtil userUtil, CourseService CourseService, UserService userService,
+                            ActivityService activityService) {
         this.userUtil = userUtil;
         this.courseService = CourseService;
         this.userService = userService;
+        this.activityService = activityService;
     }
 
     /**
@@ -76,8 +80,9 @@ public class CourseController {
         );
     }
 
-    @PostMapping("/course")
-    public Result createCourse(@RequestBody Course course) {
+    @PostMapping("/course/{activityId}")
+    public Result createCourse(@RequestBody Course course,@PathVariable Integer activityId) {
+        course.setActivity(activityService.findActivity(activityId));
         return ResultUtil.success(
                 courseService.createCourse(course)
         );
