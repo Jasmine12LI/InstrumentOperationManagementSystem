@@ -9,6 +9,8 @@ import java.util.List;
 public interface CourseService {
     CourseDto getCourse(Integer CourseId);
 
+    List<Course> getAllCourse();
+
     CourseDto createCourse(Course course);
 
     CourseDto updateCourse(Course course) throws Exception;

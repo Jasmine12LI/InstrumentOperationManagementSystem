@@ -47,6 +47,12 @@ public class CourseServiceImpl implements CourseService {
     }
 
     @Override
+    @Transactional
+    public List<Course> getAllCourse(){
+        return courseRepository.findAll();
+    }
+
+    @Override
     public CourseDto createCourse(Course course) {
         User loginUser = userUtil.getLoginUser();
         course.setLecturer(loginUser);

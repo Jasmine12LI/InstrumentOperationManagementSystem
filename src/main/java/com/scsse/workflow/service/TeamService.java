@@ -3,7 +3,6 @@ package com.scsse.workflow.service;
 import com.scsse.workflow.entity.dto.TeamDto;
 import com.scsse.workflow.entity.dto.UserDto;
 import com.scsse.workflow.entity.model.Team;
-import com.scsse.workflow.entity.model.Workflow;
 
 import java.util.List;
 
@@ -14,7 +13,10 @@ import java.util.List;
 public interface TeamService {
 
     TeamDto getTeam(Integer teamId);
+
     Team findTeam(Integer teamId);
+
+    List<Team> findAllTeams();
 
     TeamDto createTeam(Team team);
 

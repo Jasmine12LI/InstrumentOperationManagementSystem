@@ -62,7 +62,7 @@ public class TeamController {
     @GetMapping("/team/all")
     public Result getAllTeam(){
         return ResultUtil.success(
-                userService.findAllTeams(userUtil.getLoginUser())
+                teamService.findAllTeams()
         );
     }
 

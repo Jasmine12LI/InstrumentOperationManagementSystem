@@ -119,7 +119,9 @@ public class DtoTransferHelper {
     }
 
     public UserDto transferToUserDto(User user) {
-        return modelMapper.map(user, UserDto.class);
+        UserDto result = new UserDto();
+        modelMapper.map(user,result);
+        return result;
     }
 
     @Transactional

@@ -58,7 +58,7 @@ public class CourseController {
     @GetMapping("/course/all")
     public Result getAllCourse(){
         return ResultUtil.success(
-                userService.findAllCourse(userUtil.getLoginUser())
+                courseService.getAllCourse()
         );
     }
 

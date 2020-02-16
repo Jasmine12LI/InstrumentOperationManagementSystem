@@ -5,12 +5,12 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.spring.web.config.DefaultShiroFilterChainDefinition;
 import org.apache.shiro.spring.web.config.ShiroFilterChainDefinition;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
-import org.apache.shiro.web.session.mgt.DefaultWebSessionManager;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Component;
+
 //import org.crazycake.shiro.RedisCacheManager;
 //import org.crazycake.shiro.RedisManager;
 //import org.crazycake.shiro.RedisSessionDAO;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Component;
 
 
 @Slf4j
