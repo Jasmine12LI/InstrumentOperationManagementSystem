@@ -16,7 +16,7 @@ public class UserDto {
 
     private String userName;
 
-    private Integer gender;
+    private Boolean gender;
 
     private String userNumber;
 
