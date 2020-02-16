@@ -49,6 +49,19 @@ public class CourseController {
         );
     }
 
+    /**
+     * 获取所有课程
+     *
+     *
+     * @return List{CourseDto}
+     */
+    @GetMapping("/course/all")
+    public Result getAllCourse(){
+        return ResultUtil.success(
+                userService.findAllCourse(userUtil.getLoginUser())
+        );
+    }
+
     @GetMapping("/course/{courseId}")
     public Result getCourse(@PathVariable Integer courseId) {
         return ResultUtil.success(
