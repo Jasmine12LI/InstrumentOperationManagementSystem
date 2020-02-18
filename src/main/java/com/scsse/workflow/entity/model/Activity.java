@@ -90,19 +90,19 @@ public class Activity {
             inverseJoinColumns = @JoinColumn(name = "tag_id"))
     private Set<Tag> activityTags = new HashSet<>();
     
-    @OneToMany(mappedBy = "activity")
+    @OneToMany(mappedBy = "activity",fetch=FetchType.EAGER)
 	@JsonBackReference(value = "activity.teams")
     private Set<Team> teams = new HashSet<>();
     
-    @OneToMany(mappedBy = "activity")
+    @OneToMany(mappedBy = "activity",fetch=FetchType.EAGER)
     @JsonBackReference(value = "activity.recruits")
     private Set<Recruit> recruits = new HashSet<>();
     
-    @ManyToMany(mappedBy = "joinActivities")
+    @ManyToMany(mappedBy = "joinActivities",fetch=FetchType.EAGER)
     @JsonBackReference(value = "joinActivities.participants")
     Set<User> participants = new HashSet<>();
     
-    @ManyToMany(mappedBy = "followActivities")
+    @ManyToMany(mappedBy = "followActivities",fetch=FetchType.EAGER)
     @JsonBackReference(value = "followActivities.followers")
     Set<User> followers = new HashSet<>();
 

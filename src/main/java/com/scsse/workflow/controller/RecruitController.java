@@ -193,12 +193,13 @@ public class RecruitController {
      */
     @PostMapping("/recruit/{activityId}")
     public Result createOneRecruit(@RequestBody Recruit recruit, @PathVariable Integer activityId,
-                                   @RequestParam(value = "teamId", required = false) Integer teamId) {
+                                   @RequestParam(value = "teamId", required = true) Integer teamId) {
         recruit.setCreator(userUtil.getLoginUser());
         recruit.setRecruitState(recruitService.going);
         recruit.setActivity(activityService.findActivityById(activityId));
         recruit.setCreateTime(new Date());
         recruit.setTeam(teamService.findTeam(teamId));
+        recruit.setRecruitRegisteredNumber(0);
         return ResultUtil.success(recruitService.createRecruit(recruit));
     }
 

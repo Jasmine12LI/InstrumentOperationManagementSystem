@@ -147,14 +147,14 @@ public class User {
     @JsonBackReference(value = "user.joinCourses")
     private Set<Course> joinCourses = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JsonBackReference(value = "user.followUsers")
     @JoinTable(name = "user_follower",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "follower_id"))
     private Set<User> followUsers = new HashSet<>();
     
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JsonBackReference(value = "user.followActivities")
     @JoinTable(name = "user_activity_follower",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -168,14 +168,14 @@ public class User {
             inverseJoinColumns = @JoinColumn(name = "course_id"))
     private Set<Activity> followCourses = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JsonBackReference(value = "user.followRecruits")
     @JoinTable(name = "user_recruit_follower",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "recruit_id"))
     private Set<Recruit> followRecruits = new HashSet<>();
 
-    @ManyToMany
+    @ManyToMany(fetch=FetchType.EAGER)
     @JsonBackReference(value = "user.applyRecruits")
     @JoinTable(name = "user_recruit_applicant",
             joinColumns = @JoinColumn(name = "user_id"),
@@ -189,7 +189,7 @@ public class User {
 //            inverseJoinColumns = @JoinColumn(name = "recruit_id"))
 //    private Set<Recruit> successRecruits = new HashSet<>();
 
-    @ManyToMany(mappedBy = "participants")
+    @ManyToMany(mappedBy = "participants",fetch=FetchType.EAGER)
     @JsonBackReference(value = "user.successRecruits")
     private Set<Recruit> successRecruits = new HashSet<>();
 
