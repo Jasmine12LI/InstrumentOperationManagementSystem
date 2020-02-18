@@ -6,9 +6,11 @@ import com.scsse.workflow.entity.model.Activity;
 import com.scsse.workflow.entity.model.Recruit;
 import com.scsse.workflow.entity.model.Tag;
 import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.ActivityRepository;
 import com.scsse.workflow.repository.RecruitRepository;
 import com.scsse.workflow.repository.TagRepository;
+import com.scsse.workflow.repository.UserRepository;
 import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.util.dao.DtoTransferHelper;
 import com.scsse.workflow.util.dao.UserUtil;
@@ -41,13 +43,15 @@ public class ActivityServiceImpl implements ActivityService {
     private final ActivityRepository activityRepository;
 
     private final RecruitRepository recruitRepository;
+    private final UserRepository userRepository;
 
     private final TagRepository tagRepository;
 
     @Autowired
-    public ActivityServiceImpl(ModelMapper modelMapper, UserUtil userUtil, DtoTransferHelper dtoTransferHelper, ActivityRepository activityRepository, RecruitRepository recruitRepository, TagRepository tagRepository) {
+    public ActivityServiceImpl(ModelMapper modelMapper, UserUtil userUtil,UserRepository userRepository, DtoTransferHelper dtoTransferHelper, ActivityRepository activityRepository, RecruitRepository recruitRepository, TagRepository tagRepository) {
         this.modelMapper = modelMapper;
         this.userUtil = userUtil;
+        this.userRepository = userRepository;
         this.dtoTransferHelper = dtoTransferHelper;
         this.activityRepository = activityRepository;
         this.recruitRepository = recruitRepository;
@@ -159,6 +163,17 @@ public class ActivityServiceImpl implements ActivityService {
         );
     }
 
+    @Override
+    public boolean enroll(Integer userId, Integer activityId) throws WrongUsageException {
+        Activity activity = findActivity(activityId);
+        User user = userUtil.getUserByUserId(userId);
+        if(activity!=null) {
+            user.getJoinActivities().add(activity);
+            userRepository.save(user);
+            return true;
+        }
+        return false;
+    }
     @Override
     public Set<Tag> findAllTagOfActivity(Integer activityId) {
         Activity activity = activityRepository.findOne(activityId);

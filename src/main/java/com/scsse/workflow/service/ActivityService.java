@@ -4,6 +4,7 @@ import com.scsse.workflow.entity.dto.ActivityDto;
 import com.scsse.workflow.entity.dto.RecruitDto;
 import com.scsse.workflow.entity.model.Activity;
 import com.scsse.workflow.entity.model.Tag;
+import com.scsse.workflow.handler.WrongUsageException;
 
 import java.util.List;
 import java.util.Set;
@@ -38,5 +39,5 @@ public interface ActivityService {
 
     void unBindTagToActivity(Integer activityId, Integer tagId);
     Activity findActivity(Integer activityId);
-
+    boolean enroll(Integer userId, Integer activityId) throws WrongUsageException;
 }

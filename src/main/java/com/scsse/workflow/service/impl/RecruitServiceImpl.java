@@ -11,6 +11,7 @@ import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.repository.RecruitRepository;
 import com.scsse.workflow.repository.TagRepository;
 import com.scsse.workflow.repository.TeamRepository;
+import com.scsse.workflow.repository.UserRepository;
 import com.scsse.workflow.service.RecruitService;
 import com.scsse.workflow.util.container.Pair;
 import com.scsse.workflow.util.dao.DtoTransferHelper;
@@ -45,6 +46,7 @@ public class RecruitServiceImpl implements RecruitService {
     private final DtoTransferHelper dtoTransferHelper;
 
     private final RecruitRepository recruitRepository;
+    private final UserRepository userRepository;
 
     private final TagRepository tagRepository;
 
@@ -54,9 +56,11 @@ public class RecruitServiceImpl implements RecruitService {
 
 
     @Autowired
-    public RecruitServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper, RecruitRepository recruitRepository, TagRepository tagRepository, TeamRepository teamRepository, UserUtil userUtil) {
+    public RecruitServiceImpl(ModelMapper modelMapper, DtoTransferHelper dtoTransferHelper,
+                              UserRepository userRepository, RecruitRepository recruitRepository, TagRepository tagRepository, TeamRepository teamRepository, UserUtil userUtil) {
         this.modelMapper = modelMapper;
         this.dtoTransferHelper = dtoTransferHelper;
+        this.userRepository = userRepository;
         this.recruitRepository = recruitRepository;
         this.tagRepository = tagRepository;
         this.teamRepository = teamRepository;
@@ -120,7 +124,7 @@ public class RecruitServiceImpl implements RecruitService {
     public void applyOneRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
         Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
-        if(user!=null&&recruit!=null) {
+        if (user != null && recruit != null) {
             user.getApplyRecruits().add(recruit);
             userUtil.saveUser(user);
         }
@@ -130,7 +134,7 @@ public class RecruitServiceImpl implements RecruitService {
     public void cancelAppliedRecruit(Integer userId, Integer recruitId) throws WrongUsageException {
         Recruit recruit = getOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
-        if(user!=null&&recruit!=null) {
+        if (user != null && recruit != null) {
             user.getApplyRecruits().remove(recruit);
             userUtil.saveUser(user);
         }
@@ -141,10 +145,13 @@ public class RecruitServiceImpl implements RecruitService {
         Recruit recruit = recruitRepository.findOne(recruitId);
         User user = userUtil.getUserByUserId(userId);
         if (recruit != null && user != null) {
-            recruit.setRecruitRegisteredNumber(recruit.getRecruitWillingNumber()+1);
+            recruit.setRecruitRegisteredNumber(recruit.getRecruitWillingNumber() + 1);
+            if (recruit.getActivity() != null)
+                user.getJoinActivities().add(recruit.getActivity());
             recruit.getParticipants().add(user);
             user.getApplyRecruits().remove(recruit);
             recruitRepository.save(recruit);
+            userRepository.save(user);
         }
     }
 
@@ -154,10 +161,13 @@ public class RecruitServiceImpl implements RecruitService {
         User user = userUtil.getUserByUserId(userId);
 
         if (recruit != null && user != null) {
-            recruit.setRecruitRegisteredNumber(recruit.getRecruitWillingNumber()-1);
+            recruit.setRecruitRegisteredNumber(recruit.getRecruitWillingNumber() - 1);
+            if (recruit.getActivity() != null)
+                user.getJoinActivities().remove(recruit.getActivity());
             recruit.getParticipants().remove(user);
             user.getApplyRecruits().add(recruit);
             recruitRepository.save(recruit);
+            userRepository.save(user);
         }
     }
 
@@ -224,18 +234,19 @@ public class RecruitServiceImpl implements RecruitService {
         Set<Recruit> recruits = recruitRepository.findAllByCreator_Id(userUtil.getLoginUserId());
         // select all applicant and add it to the result.
         recruits.forEach(
-            recruit ->
-                result.addAll(dtoTransferHelper.transferToListDto(recruit.getApplicants(), recruit,
-                    (firstParam, secondParam) -> dtoTransferHelper
-                        .transferToUserAppliedRecruit((User) firstParam, (Recruit) secondParam)
-                ))
+                recruit ->
+                        result.addAll(dtoTransferHelper.transferToListDto(recruit.getApplicants(), recruit,
+                                (firstParam, secondParam) -> dtoTransferHelper
+                                        .transferToUserAppliedRecruit((User) firstParam, (Recruit) secondParam)
+                        ))
 
         );
         return result;
     }
+
     @Override
-    public Recruit findRecruit(Integer recruitId){
-        return  recruitRepository.findOne(recruitId);
+    public Recruit findRecruit(Integer recruitId) {
+        return recruitRepository.findOne(recruitId);
     }
 
     @Override

@@ -1,6 +1,8 @@
 package com.scsse.workflow.controller;
 
 import com.scsse.workflow.entity.model.Activity;
+import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
@@ -122,6 +124,13 @@ public class ActivityController {
     @DeleteMapping("/activity/{activityId}")
     public Result deleteOneActivity(@PathVariable Integer activityId) {
         activityService.deleteActivityById(activityId);
+        return ResultUtil.success();
+    }
+
+    @PutMapping("/activity/{activityId}/enroll")
+    public Result enroll(@PathVariable Integer activityId) throws WrongUsageException {
+        Integer userId = userUtil.getLoginUserId();
+        activityService.enroll(userId, activityId);
         return ResultUtil.success();
     }
 }
