@@ -3,6 +3,7 @@ package com.scsse.workflow.service.shiro;
 import com.scsse.workflow.entity.dto.UserDto;
 import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.repository.UserRepository;
+import com.scsse.workflow.service.UserService;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
@@ -20,6 +21,9 @@ public class MyRealm extends AuthorizingRealm {
     UserRepository userRepository;
 
     @Autowired
+    UserService userService;
+
+    @Autowired
     AuthorityQuerier authorityQuerier;
 
     //授权
@@ -29,7 +33,7 @@ public class MyRealm extends AuthorizingRealm {
         Object principal = principals.getPrimaryPrincipal();
         UserDto userDTO = (UserDto) principal;
 
-        int id = userDTO.getUserId();
+        int id = userDTO.getUserId();//user id not student id
 
         //获取用户的角色、权限信息
         List<String> roleNameList = authorityQuerier.getRoleNameListByUser_id(id);
@@ -56,10 +60,10 @@ public class MyRealm extends AuthorizingRealm {
         UsernamePasswordToken token = (UsernamePasswordToken) authenticationToken;
 
         //数据库匹配，认证
-        String username = token.getUsername();
+        String username = token.getUsername(); //student id for web
         String password = new String(token.getPassword());
 
-        User user = userRepository.getOne(Integer.parseInt(username));
+        User user = userRepository.findByStuNumber(username);
         if(user == null || !(user.getPassword()+"").equals(password))throw new AuthenticationException();
 
         // 处理登录信息

@@ -2,6 +2,7 @@ package com.scsse.workflow.service;
 
 import com.scsse.workflow.entity.dto.*;
 import com.scsse.workflow.entity.model.*;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Set;
@@ -12,7 +13,10 @@ import java.util.Set;
  */
 
 public interface UserService {
+
+    @Transactional
     User getOne(Integer id);
+    @Transactional
     UserDto findUserByStuNumber(String number);
     List<UserDto> findAllUser();
     UserDto findUser(Integer userId);

@@ -6,6 +6,7 @@ import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
 import com.scsse.workflow.util.result.ResultUtil;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,7 @@ public class TeamController {
      * @return List{TeamDto}
      */
     @GetMapping("/team/joinedTeam")
+    @RequiresRoles("admin")
     public Result getJoinTeam() {
         return ResultUtil.success(
                 userService.findJoinedTeam(userUtil.getLoginUser()));
