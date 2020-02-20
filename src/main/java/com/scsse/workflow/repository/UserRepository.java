@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<User, Integer> {
 
     User findByOpenId(String openid);
-
+    User findByStuNumber(String stuNumber);
 //    Optional<User> findById(Integer userId);
 
     @Query(" select count(f) from UserFollower f where f.followerId = :userId")

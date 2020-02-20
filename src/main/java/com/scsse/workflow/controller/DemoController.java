@@ -3,6 +3,7 @@ package com.scsse.workflow.controller;
 import java.util.List;
 import java.util.Set;
 
+import com.scsse.workflow.entity.dto.UserDto;
 import com.scsse.workflow.entity.model.*;
 import com.scsse.workflow.service.*;
 import com.scsse.workflow.util.result.Result;
@@ -56,9 +57,9 @@ public class DemoController {
 //	}
     @GetMapping(value = "/get/user")
     @ResponseBody
-    public User showUser(Integer id) throws Exception {
+    public UserDto showUser(Integer id) throws Exception {
 
-        return userService.getOne(1);
+        return userService.findUserByStuNumber("101");
     }
 
     @GetMapping(value = "/get/role")

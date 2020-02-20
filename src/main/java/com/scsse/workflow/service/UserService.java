@@ -13,6 +13,7 @@ import java.util.Set;
 
 public interface UserService {
     User getOne(Integer id);
+    UserDto findUserByStuNumber(String number);
     List<UserDto> findAllUser();
     UserDto findUser(Integer userId);
     UserDetailPage findUserDetail(Integer userId);

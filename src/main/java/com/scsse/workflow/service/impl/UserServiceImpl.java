@@ -77,6 +77,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public UserDto findUserByStuNumber(String number){
+        return dtoTransferHelper.transferToUserDto(userRepository.findByStuNumber(number));
+    }
+    @Override
     public UserDto createUser(User user) {
         return dtoTransferHelper.transferToUserDto(userRepository.save(user));
     }
@@ -359,5 +363,7 @@ public class UserServiceImpl implements UserService {
         System.out.println("userid: " + id);
         return userRepository.findOne(id);
     }
+
+
 
 }
