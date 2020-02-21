@@ -2,11 +2,13 @@ package com.scsse.workflow.entity.model;
 
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.persistence.*;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import lombok.Data;
@@ -23,6 +25,7 @@ public class Recruit {
     private Integer id;
 
     @Column(name = "create_time")
+    @JsonFormat( pattern="yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date createTime;
 
     @Column(name = "recruit_description")
@@ -125,5 +128,21 @@ public class Recruit {
                 ", recruitDescription='" + recruitDescription + '\'' +
                 ", recruitName='" + recruitName + '\'' +
                 '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Recruit recruit = (Recruit) o;
+        return Objects.equals(id, recruit.id) &&
+                Objects.equals(createTime, recruit.createTime) &&
+                Objects.equals(recruitDescription, recruit.recruitDescription) &&
+                Objects.equals(recruitName, recruit.recruitName);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, createTime, recruitDescription, recruitName);
     }
 }

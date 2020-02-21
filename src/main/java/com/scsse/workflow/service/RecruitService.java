@@ -25,7 +25,8 @@ public interface RecruitService {
 
     List<RecruitDto> findPaginationRecruit(Integer pageNum, Integer pageSize);
 
-    List<RecruitDto> findPaginationRecruitWithCriteria(Integer pageNum, Integer pageSize, final HashMap<Integer, Pair<String, String>> queryParam);
+    List<RecruitDto> findPaginationRecruitWithCriteria(Integer pageNum, Integer pageSize, String recruitName,String recruitPosition,String currentTime);
+//    List<RecruitDto> findPaginationRecruitWithCriteria(Integer pageNum, Integer pageSize, final HashMap<Integer, Pair<String, String>> queryParam);
 
     RecruitDto findRecruitById(Integer recruitId);
     Recruit findRecruit(Integer recruitId);

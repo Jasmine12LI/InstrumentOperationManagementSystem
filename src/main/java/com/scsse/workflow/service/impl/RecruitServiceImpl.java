@@ -19,6 +19,7 @@ import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.mvc.PredicateUtil;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -26,8 +27,10 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.StringUtils;
 
-import javax.persistence.criteria.Predicate;
+import javax.persistence.criteria.*;
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -79,23 +82,68 @@ public class RecruitServiceImpl implements RecruitService {
     }
 
     @Override
-    public List<RecruitDto> findPaginationRecruitWithCriteria(Integer pageNum, Integer pageSize, HashMap<Integer, Pair<String, String>> queryParam) {
+    public List<RecruitDto> findPaginationRecruitWithCriteria(
+            Integer pageNum, Integer pageSize,
+            String recruitName,String recruitPosition,String currentTime) {
         Pageable pageable = new PageRequest(pageNum, pageSize, Sort.Direction.DESC, "createTime");
         List<RecruitDto> result = new ArrayList<>();
-        User currentUser = userUtil.getLoginUser();
-        recruitRepository.findAll((Specification<Recruit>) (root, query, criteriaBuilder) -> {
-            List<Predicate> predicateList = new ArrayList<>();
-            PredicateUtil predicateHelper = new PredicateUtil<>(criteriaBuilder, root);
-            queryParam.forEach(
-                    (predicateType, KV) -> predicateList.add(predicateHelper.generatePredicate(predicateType, KV.getKey(), KV.getValue()))
-            );
-            return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
-        }, pageable).map(
-                o -> dtoTransferHelper.transferToRecruitDto(o, currentUser)
-        ).forEach(result::add);
+        Page<Recruit> page = recruitRepository.findAll(new Specification<Recruit> () {
+
+            public Predicate toPredicate(Root<Recruit> root,
+                                         CriteriaQuery<?> query, CriteriaBuilder cb) {
+                Path<String> recruitNamePath = root.get("recruitName");
+                Path<String> recruitPositionPath = root.get("recruitPosition");
+                Path<Timestamp> currentTimePath = root.get("createTime");
+                /**
+                 * 连接查询条件, 不定参数，可以连接0..N个查询条件
+                 */
+                Predicate condition1 = null;
+                if(recruitName==null||recruitName.trim()==""){
+                    condition1=cb.like(recruitNamePath, "%%");
+                }else{
+                    condition1=cb.like(recruitNamePath, "%"+recruitName+"%");
+                }
+                Predicate condition2 = null;
+                if(recruitPosition==null||recruitPosition.trim()==""){
+                    condition2=cb.like(recruitPositionPath, "%%");
+                }else{
+                    condition2=cb.like(recruitPositionPath, "%"+recruitPosition+"%");
+                }
+                query.where(condition1,condition2,
+                        cb.lessThanOrEqualTo(currentTimePath,Timestamp.valueOf(currentTime))); //这里可以设置任意条查询条件
+
+                return null;
+            }
+
+        },pageable);
+        List<Recruit> list = page.getContent();
+                User currentUser = userUtil.getLoginUser();
+
+        for(Recruit ans:list){
+            result.add(dtoTransferHelper.transferToRecruitDto(ans,currentUser));
+        }
         return result;
     }
-
+//    @Override
+//    public List<RecruitDto> findPaginationRecruitWithCriteria(
+//            Integer pageNum, Integer pageSize,
+//            HashMap<Integer, Pair<String, String>> queryParam) {
+//        Pageable pageable = new PageRequest(pageNum, pageSize, Sort.Direction.DESC, "createTime");
+//        List<RecruitDto> result = new ArrayList<>();
+//        User currentUser = userUtil.getLoginUser();
+//        recruitRepository.findAll((Specification<Recruit>) (root, query, criteriaBuilder) -> {
+//            List<Predicate> predicateList = new ArrayList<>();
+//            PredicateUtil predicateHelper = new PredicateUtil<>(criteriaBuilder, root);
+//            queryParam.forEach(
+//                    (predicateType, KV) -> predicateList.add(predicateHelper.generatePredicate(predicateType, KV.getKey(), KV.getValue()))
+//            );
+//            return criteriaBuilder.and(predicateList.toArray(new Predicate[0]));
+//        }, pageable)
+//                .map(
+//                        o -> dtoTransferHelper.transferToRecruitDto(o, currentUser)
+//                ).forEach(result::add);
+//        return result;
+//    }
     @Override
     public RecruitDto findRecruitById(Integer recruitId) {
         User u = userUtil.getLoginUser();
