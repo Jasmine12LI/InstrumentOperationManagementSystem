@@ -150,15 +150,32 @@ public class UserServiceImpl implements UserService {
         );
     }
 
+    @Override
+    public void followCourse(Integer userId, Integer courseId) {
+        User user = userRepository.findOne(userId);
+        Course course = courseRepository.findOne(courseId);
+        if (user != null && course != null) {
+            user.getFollowCourses().add(course);
+            userRepository.save(user);
+        }
+    }
+
 
     @Override
-    public void followCourse(Integer loginUserId, Integer courseId) {
-
+    public List<CourseDto> findAllFollowedCourse(Integer userId) {
+        User user = userRepository.findOne(userId);
+        Set<Course> courses = user.getFollowCourses();
+        return dtoTransferHelper.transferToListDto(courses);
     }
 
     @Override
-    public void unfollowCourse(Integer loginUserId, Integer courseId) {
-
+    public void unfollowCourse(Integer userId, Integer courseId) {
+        User user = userRepository.findOne(userId);
+        Course course = courseRepository.findOne(courseId);
+        if (user != null && course != null) {
+            user.getFollowCourses().remove(course);
+            userRepository.save(user);
+        }
     }
 
     @Override

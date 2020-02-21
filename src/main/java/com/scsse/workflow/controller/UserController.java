@@ -40,7 +40,7 @@ public class UserController {
      * @see User
      */
     @PostMapping("/user")
-    public Result createUser(@RequestBody User user) {
+    public Result createOneUser(@RequestBody User user) {
         return ResultUtil.success(userService.createUser(user));
     }
 
@@ -176,7 +176,7 @@ public class UserController {
      * 获取用户关注的所有课程
      *
      * @param userId 调用者的openid
-     * @return List{Activity}
+     * @return List{Course}
      * <p>
      * e.g.
      * GET /user/1/followedCourse
@@ -184,7 +184,7 @@ public class UserController {
     @GetMapping("/user/{userId}/followedCourse")
     public Result getFollowedCourse(@PathVariable() Integer userId) {
         return ResultUtil.success(
-                userService.findAllFollowedActivity(userId)
+                userService.findAllFollowedCourse(userId)
         );
     }
 

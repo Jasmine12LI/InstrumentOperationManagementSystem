@@ -146,9 +146,11 @@ public interface UserService {
 
     List<ActivityDto> findAllFollowedActivity(Integer userId);
 
-    void followCourse(Integer loginUserId, Integer courseId);
+    void followCourse(Integer userId, Integer courseId);
 
-    void unfollowCourse(Integer loginUserId, Integer courseId);
+    void unfollowCourse(Integer userId, Integer courseId);
+
+    List<CourseDto> findAllFollowedCourse(Integer userId);
 
     Set<Role> findRole(Integer userId);
 
