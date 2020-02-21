@@ -80,6 +80,7 @@ public class UserServiceImpl implements UserService {
     public UserDto findUserByStuNumber(String number){
         return dtoTransferHelper.transferToUserDto(userRepository.findByStuNumber(number));
     }
+
     @Override
     public UserDto createUser(User user) {
         return dtoTransferHelper.transferToUserDto(userRepository.save(user));

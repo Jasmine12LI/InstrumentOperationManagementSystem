@@ -30,6 +30,33 @@ public class UserController {
 
 
     /**
+     * 创建一个用户
+     *
+     * @param user 用户
+     * @return User
+     * 例:
+     * url:
+     * /recruit
+     * @see User
+     */
+    @PostMapping("/user")
+    public Result createUser(@RequestBody User user) {
+        return ResultUtil.success(userService.createUser(user));
+    }
+
+    @PutMapping("/user/{userId}")
+    public Result updateOneUser(@RequestBody User user, @PathVariable Integer userId) {
+        user.setId(userId);
+        return ResultUtil.success(userService.updateUser(user));
+    }
+
+    @DeleteMapping("/user/{userId}")
+    public Result deleteOneuser(@PathVariable Integer userId) {
+        userService.deleteUserById(userId);
+        return ResultUtil.success();
+    }
+
+    /**
      * 返回登录用户的UserId
      * @return UserId
      */
@@ -58,6 +85,11 @@ public class UserController {
     @GetMapping("/user/{userId}")
     public Result getUserDetail(@PathVariable Integer userId) {
         return ResultUtil.success(userService.findUser(userId));
+    }
+
+    @GetMapping("/user/all")
+    public Result getAllUsers(){
+        return ResultUtil.success(userService.findAllUser());
     }
 
     /**
@@ -270,6 +302,4 @@ public class UserController {
         userService.unfollowCourse(userUtil.getLoginUserId(), courseId);
         return ResultUtil.success();
     }
-
-
 }

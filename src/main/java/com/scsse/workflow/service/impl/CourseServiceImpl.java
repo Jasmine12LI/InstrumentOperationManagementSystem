@@ -50,7 +50,7 @@ public class CourseServiceImpl implements CourseService {
     @Override
     @Transactional
     public List<Course> getAllCourse(){
-        return courseRepository.findAll();
+        return dtoTransferHelper.transferToListDto(courseRepository.findAll(),eachItem -> dtoTransferHelper.transferToCourseDto((Course) eachItem));
     }
 
     @Override

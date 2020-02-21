@@ -16,10 +16,14 @@ public interface UserService {
 
     @Transactional
     User getOne(Integer id);
+
     @Transactional
     UserDto findUserByStuNumber(String number);
+
     List<UserDto> findAllUser();
+
     UserDto findUser(Integer userId);
+
     UserDetailPage findUserDetail(Integer userId);
 
     UserDto createUser(User user);
@@ -27,7 +31,6 @@ public interface UserService {
     UserDto updateUser(User user);
 
     void deleteUserById(Integer userId);
-
 
     /**
      * 用户申请一条招聘
@@ -150,7 +153,9 @@ public interface UserService {
     Set<Role> findRole(Integer userId);
 
     Set<Access> findAccess(Integer userId);
+
     void addRole(Integer userId,Integer roleId);
+
     void removeRole(Integer userId,Integer roleId);
 
 }

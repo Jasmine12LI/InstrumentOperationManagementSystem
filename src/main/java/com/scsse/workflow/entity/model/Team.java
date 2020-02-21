@@ -1,15 +1,12 @@
 package com.scsse.workflow.entity.model;
 
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.persistence.*;
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
+
+import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Data
 @Entity
