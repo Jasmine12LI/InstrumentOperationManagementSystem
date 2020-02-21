@@ -7,6 +7,7 @@ import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
 import com.scsse.workflow.util.result.ResultUtil;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -73,6 +74,7 @@ public class CourseController {
         );
     }
 
+    @RequiresRoles("admin")
     @PutMapping("/course/{courseId}")
     public Result updateCourse(@PathVariable Integer CourseId, @RequestBody Course course) throws Exception {
         return ResultUtil.success(
@@ -80,6 +82,7 @@ public class CourseController {
         );
     }
 
+    @RequiresRoles("admin")
     @PostMapping("/course/{activityId}")
     public Result createCourse(@RequestBody Course course,@PathVariable Integer activityId) {
         course.setActivity(activityService.findActivity(activityId));
@@ -88,6 +91,7 @@ public class CourseController {
         );
     }
 
+    @RequiresRoles("admin")
     @DeleteMapping("/course/{courseId}")
     public Result deleteCourse(@PathVariable Integer courseId) {
         courseService.deleteCourse(courseId);

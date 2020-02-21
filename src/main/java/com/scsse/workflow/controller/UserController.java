@@ -7,6 +7,7 @@ import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
 import com.scsse.workflow.util.result.ResultUtil;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,7 +28,6 @@ public class UserController {
         this.userUtil = userUtil;
         this.userService = userService;
     }
-
 
     /**
      * 创建一个用户
@@ -50,6 +50,7 @@ public class UserController {
         return ResultUtil.success(userService.updateUser(user));
     }
 
+    @RequiresRoles("admin")
     @DeleteMapping("/user/{userId}")
     public Result deleteOneuser(@PathVariable Integer userId) {
         userService.deleteUserById(userId);

@@ -1,12 +1,12 @@
 package com.scsse.workflow.controller;
 
 import com.scsse.workflow.entity.model.Activity;
-import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.handler.WrongUsageException;
 import com.scsse.workflow.service.ActivityService;
 import com.scsse.workflow.util.dao.UserUtil;
 import com.scsse.workflow.util.result.Result;
 import com.scsse.workflow.util.result.ResultUtil;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -107,6 +107,7 @@ public class ActivityController {
      * /recruit
      * @see Activity
      */
+    @RequiresRoles("admin")
     @PostMapping("/activity")
     public Result createOneActivity(@RequestBody Activity activity) {
         activity.setPromoter(userUtil.getLoginUser());
@@ -115,12 +116,14 @@ public class ActivityController {
         return ResultUtil.success(activityService.createActivity(activity));
     }
 
+    @RequiresRoles("admin")
     @PutMapping("/activity/{activityId}")
     public Result updateOneActivity(@RequestBody Activity activity, @PathVariable Integer activityId) {
         activity.setId(activityId);
         return ResultUtil.success(activityService.updateActivity(activity));
     }
 
+    @RequiresRoles("admin")
     @DeleteMapping("/activity/{activityId}")
     public Result deleteOneActivity(@PathVariable Integer activityId) {
         activityService.deleteActivityById(activityId);
