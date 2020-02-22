@@ -16,7 +16,7 @@ public interface TeamService {
 
     Team findTeam(Integer teamId);
 
-    List<Team> findAllTeams();
+    List<TeamDto> findAllTeams();
 
     TeamDto createTeam(Team team);
 

@@ -55,8 +55,8 @@ public class TeamServiceImpl implements TeamService {
 
     @Override
     @Transactional
-    public List<Team> findAllTeams(){
-        return teamRepository.findAll();
+    public List<TeamDto> findAllTeams(){
+        return dtoTransferHelper.transferToListDto(teamRepository.findAll(),eachItem -> dtoTransferHelper.transferToTeamDto((Team) eachItem));
     }
 
     @Override
