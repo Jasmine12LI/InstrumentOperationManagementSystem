@@ -12,8 +12,12 @@ public enum ResultCode {
     CODE_404(403, "找不到访问地址"),
     CODE_500(500, "系统内部错误"),
     CODE_501(501, "对象已存在，请检测唯一性"),
-    CODE_503(502, "对象不存在，请检测请求参数");
-
+    CODE_502(502, "对象不存在，请检测请求参数"),
+    CODE_503(503, "无法删除！"),
+    CODE_504(504, "用户名不存在"),
+    CODE_505(505, "密码输入错误"),
+    CODE_506(506, "该用户被锁定，无法登录"),
+    CODE_507(507, "访问失败");
     private Integer code;
 
     private String msg;
@@ -30,5 +34,7 @@ public enum ResultCode {
     public String getMsg() {
         return msg;
     }
+
+
 }
 

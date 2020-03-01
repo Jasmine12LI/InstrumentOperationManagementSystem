@@ -4,33 +4,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * @author Alfred Fu
- * Created on 2019/9/18 8:20 上午
- */
+import java.io.Serializable;
+import java.util.Set;
+
 @Getter
 @Setter
 @NoArgsConstructor
-public class UserDto {
+public class UserDto implements Serializable {
     private Integer userId;
-
     private String userName;
-
-    private Boolean gender;
-
-    private String userNumber;
-
-    private String userGrade;
-
     private String userPhone;
+    private Set<RoleDto> userRoles;
 
-    private String userEmail;
-
-    private String userSpecialty;
-
-    private String userResume;
-
-    private String wxId;
-
-    private String college;
 }

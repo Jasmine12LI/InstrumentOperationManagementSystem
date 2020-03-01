@@ -4,29 +4,15 @@ import com.scsse.workflow.entity.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
+import javax.transaction.Transactional;
 import java.util.List;
-import java.util.Optional;
 
-/**
- * @author Alfred Fu
- * Created on 2019-02-19 20:06
- */
-public interface UserRepository extends JpaRepository<User, Integer> {
-
-    User findByOpenId(String openid);
-    @Transactional
-    User findByStuNumber(String stuNumber);
-//    Optional<User> findById(Integer userId);
-
-    @Query(" select count(f) from UserFollower f where f.followerId = :userId")
-    Integer findFollowerNumberByUserId(@Param("userId") Integer userId);
-
-    @Query("select u from User u where u.id in(select f.userId from UserFollower f where f.followerId = :userId)")
-    List<User> findUserFollower(@Param("userId") Integer userId);
-
+public interface UserRepository  extends JpaRepository<User, Integer> {
+    User findById(Integer id);
     void deleteById(Integer userId);
 
-    boolean existsDistinctByOpenId(String openid);
+@Query(value = "select * from User  u where u.name = ?1",nativeQuery = true)
+   public User findName ( String name);
+
 }

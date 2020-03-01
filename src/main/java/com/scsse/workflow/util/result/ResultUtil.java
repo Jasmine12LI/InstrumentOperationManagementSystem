@@ -9,6 +9,9 @@ package com.scsse.workflow.util.result;
 public class ResultUtil {
 
 
+    public ResultUtil(ResultCode code502) {
+    }
+
     /**
      * 请求数据成功时
      *

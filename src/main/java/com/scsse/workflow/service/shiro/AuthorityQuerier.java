@@ -34,6 +34,9 @@ public class AuthorityQuerier {
 
         return roleList;
     }
+    public List<String> getAllRoleName(){
+        return roleRepository.findAllName();
+    }
 
     public List<String> getRoleNameListByUser_id(@NotNull Integer user_id){
         List<Role> roleList = getRoleListByUser_id(user_id);

@@ -87,8 +87,6 @@
             <artifactId>junit</artifactId>
             <version>4.12</version>
         </dependency>
-
-        <!--shiro-spring -->
         <dependency>
             <groupId>org.apache.shiro</groupId>
             <artifactId>shiro-spring</artifactId>
@@ -112,8 +110,6 @@
             <artifactId>shiro-cas</artifactId>
             <version>1.4.1</version>
         </dependency>
-
-
     </dependencies>
 
     <build>

@@ -1,43 +1,38 @@
 package com.scsse.workflow.entity.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import lombok.ToString;
 
 import javax.persistence.*;
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-
-import lombok.*;
+import java.io.Serializable;
 
 @Data
 @ToString
 @Entity
 @NoArgsConstructor
-@Table(name = "access")
-@JsonIgnoreProperties({ "handler","hibernateLazyInitializer"})
-public class Access {
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	@Column
-	private Integer id;
+@Table(name ="access")
+@JsonIgnoreProperties({"handler", "hibernateLazyInitializer"})
+public class Access implements Serializable {
 
-	@Column
-	private String url;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column
+    private Integer id;
 
-	@Column
-	private String title;
+    @Column
+    private String url;
 
-//	@ManyToMany(mappedBy = "accesses")
-//	@JsonBackReference(value = "access.roles")
-//	Set<Role> roles = new HashSet<>();
+    @Column
+    private String title;
 
-	@Override
-	public String toString() {
-		return "Access{" +
-				"id=" + id +
-				", url='" + url + '\'' +
-				", title='" + title + '\'' +
-				'}';
-	}
+    @Override
+    public String toString() {
+        return "Access{" +
+                "id=" + id +
+                ", url='" + url + '\'' +
+                ", title='" + title + '\'' +
+                '}';
+    }
 }
