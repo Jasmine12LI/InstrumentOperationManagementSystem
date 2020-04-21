@@ -5,16 +5,10 @@ import org.apache.commons.math3.fitting.WeightedObservedPoints;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
-import java.math.BigDecimal;
 import java.util.List;
 
-public class HandleBigDecimal {
+public class HandleCommon {
 
-    public   BigDecimal stringToBidDecimal(String decimal){
-        BigDecimal bd = new BigDecimal(decimal);
-        return bd;
-
-    }
 
     public  String codeString(String fileName) throws Exception {
         BufferedInputStream bin = new BufferedInputStream(new FileInputStream(fileName));

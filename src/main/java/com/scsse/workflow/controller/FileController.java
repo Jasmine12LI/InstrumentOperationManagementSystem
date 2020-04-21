@@ -2,17 +2,13 @@ package com.scsse.workflow.controller;
 
 
 import com.scsse.workflow.entity.Data;
-import com.scsse.workflow.entity.HandleBigDecimal;
-import com.scsse.workflow.util.result.Result;
+import com.scsse.workflow.entity.HandleCommon;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import java.io.*;
-import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,7 +16,7 @@ import java.util.List;
 public class FileController {
     private int length=30;
     private static final Logger log= LoggerFactory.getLogger(FileController.class);
-    private static final  HandleBigDecimal handleBigDecimal = new HandleBigDecimal();
+    private static final HandleCommon HANDLE_COMMON = new HandleCommon();
     private List<Data> sampleList = new ArrayList<Data>(); //奇数行
     private List<Data> sampleList2 = new ArrayList<Data>(); //偶数行
     private boolean isTwoFile=false;
@@ -54,7 +50,7 @@ public class FileController {
 
         //读取文件
         FileReader fileReader = new FileReader(fileName);
-         encoding = handleBigDecimal.codeString(fileName); //获取编码方式
+         encoding = HANDLE_COMMON.codeString(fileName); //获取编码方式
         BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(new FileInputStream(fileName),encoding));
         String line = bufferedReader.readLine();
         while(line !=null)
@@ -89,18 +85,18 @@ public class FileController {
         if(isTwoFile){
 
             createBeSingleFile(trueName+"-1",sampleList);
-           Double slope = handleBigDecimal.xishu(sampleList);
+           Double slope = HANDLE_COMMON.xishu(sampleList);
             System.out.println("系数为："+slope);
             afterHandle(trueName+"-1",sampleList,slope);
 
             createBeSingleFile(trueName+"-2",sampleList2);
-            Double slope2 = handleBigDecimal.xishu(sampleList2);
+            Double slope2 = HANDLE_COMMON.xishu(sampleList2);
             System.out.println("系数为："+slope2);
             afterHandle(trueName+"-2",sampleList2,slope2);
         }
         else{
             createBeSingleFile(trueName,sampleList);
-            Double slope = handleBigDecimal.xishu(sampleList);
+            Double slope = HANDLE_COMMON.xishu(sampleList);
             System.out.println("系数为："+slope);
             afterHandle(trueName,sampleList,slope);
         }
@@ -189,20 +185,20 @@ public class FileController {
                 writer.append(System.getProperty("line.separator"));
             }
 
-            writer.append(handleBigDecimal.appentStr4Length("样品ID",length)
-                          +handleBigDecimal.appentStr4Length("平均面积",length)
-                          +handleBigDecimal.appentStr4Length("斜率",length)
-                          +handleBigDecimal.appentStr4Length("浓度",length));
+            writer.append(HANDLE_COMMON.appentStr4Length("样品ID",length)
+                          + HANDLE_COMMON.appentStr4Length("平均面积",length)
+                          + HANDLE_COMMON.appentStr4Length("斜率",length)
+                          + HANDLE_COMMON.appentStr4Length("浓度",length));
             writer.append(System.getProperty("line.separator"));
 
             for(Data s : dataList){
                 Double concent = s.getMeanMrea()/slope1;
                 concent=(double) Math.round(concent*1000) / 1000;
 
-                writer.append(handleBigDecimal.appentStr4Length(s.getId(),length)
-                +handleBigDecimal.appentStr4Length(s.getMeanMrea().toString(),length)
-                +handleBigDecimal.appentStr4Length(slope1.toString(),length)
-                +handleBigDecimal.appentStr4Length(concent.toString(),length));
+                writer.append(HANDLE_COMMON.appentStr4Length(s.getId(),length)
+                + HANDLE_COMMON.appentStr4Length(s.getMeanMrea().toString(),length)
+                + HANDLE_COMMON.appentStr4Length(slope1.toString(),length)
+                + HANDLE_COMMON.appentStr4Length(concent.toString(),length));
                 writer.append(System.getProperty("line.separator"));
             }
             writer.flush();
