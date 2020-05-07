@@ -79,7 +79,7 @@ public class UserController {
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         System.out.println(user);
         System.out.println(user.getName());
-        return ResultUtil.success();
+        return ResultUtil.success(userService.getUser(user.getId()));
     }
 
     @PostMapping("/user/logout")
