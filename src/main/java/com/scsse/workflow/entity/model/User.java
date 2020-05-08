@@ -53,7 +53,7 @@ public class User  implements Serializable {
 
     //审核的账单
     @OneToMany(mappedBy = "checkUser",fetch=FetchType.EAGER)
-    @JsonBackReference(value = "user.accounts")
+    @JsonBackReference(value = "user.checkAccounts")
     private Set<Account> checkAccounts = new HashSet<>();
 
     @ManyToMany(fetch=FetchType.EAGER)

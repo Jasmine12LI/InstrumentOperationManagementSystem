@@ -9,7 +9,6 @@ import lombok.Setter;
 @Getter
 @NoArgsConstructor
 public class RoleDto {
-
     private Integer RoleId;
     private String RoleName;
 }

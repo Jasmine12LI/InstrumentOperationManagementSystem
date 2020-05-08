@@ -64,7 +64,14 @@ public class UserServiceImpl implements UserService {
     public UserDto updateUser(User user) {
         Integer userId= user.getId();
         User oldUser = userRepository.findOne(userId);
+        Set<Role> roles = oldUser.getRoles();
         modelMapper.map(user,oldUser);
+        for(Role role : roles){
+            if(role!=null&&!user.getRoles().contains(role)){
+                oldUser.getRoles().add(role);
+            }
+        }
+
         return dtoTransferHelper.transferToUserDto(userRepository.save(oldUser));
     }
 

@@ -89,7 +89,7 @@ public class UserController {
         return ResultUtil.success();
     }
 
-    @RequiresRoles("admin")
+
     @GetMapping("/user/all")
     public Result getAllUser(){
         return  ResultUtil.success(userService.findAllUser());
