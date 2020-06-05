@@ -13,6 +13,5 @@ import java.util.Set;
 public class DeviceDto {
     private Integer deviceId;
     private String  deviceName;
-    private BigDecimal deviceExpense;
-    private  BigDecimal deviceIncome;
+    private Double deviceExpense;
 }

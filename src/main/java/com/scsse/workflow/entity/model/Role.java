@@ -32,11 +32,6 @@ public class Role implements Serializable {
     @Column
     private Boolean status;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    @JsonBackReference(value = "role.access")
-    @JoinTable(name="role_access",joinColumns = @JoinColumn(name = "role_id"),
-    inverseJoinColumns = @JoinColumn(name ="access_id"))
-    private Set<Access> access = new HashSet<>();
 
 
     @Override

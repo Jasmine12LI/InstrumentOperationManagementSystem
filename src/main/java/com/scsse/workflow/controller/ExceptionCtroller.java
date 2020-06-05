@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.net.BindException;
 
 @RestControllerAdvice
 public class ExceptionCtroller {
@@ -19,7 +20,7 @@ public class ExceptionCtroller {
     public Result defaultErrorHandler(HttpServletRequest req, HttpServletResponse resp, Exception e) throws Exception{
         return ResultUtil.error(ResultCode.CODE_403);
     }
-    @ExceptionHandler(value = Exception.class)
+    @ExceptionHandler(value =Exception.class)
     public Result ExceptionHandler(HttpServletRequest req, HttpServletResponse resp, Exception e) throws Exception{
         return ResultUtil.error(ResultCode.CODE_507);
     }

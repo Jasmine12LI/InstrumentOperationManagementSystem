@@ -15,5 +15,6 @@ public class UserDto implements Serializable {
     private String userName;
     private String userPhone;
     private Set<RoleDto> userRoles;
+    private Integer state;
 
 }

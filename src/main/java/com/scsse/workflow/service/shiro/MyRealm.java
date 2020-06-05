@@ -38,7 +38,7 @@ public class MyRealm extends AuthorizingRealm {
 
         //获取用户的角色、权限信息
         List<String> roleNameList = authorityQuerier.getRoleNameListByUser_id(id);
-        List<String> permissionNameList = authorityQuerier.getPermissionNameListByUser_id(id);
+     //   List<String> permissionNameList = authorityQuerier.getPermissionNameListByUser_id(id);
 
         //注入角色与权限
         System.out.println(roleNameList);
@@ -48,7 +48,7 @@ public class MyRealm extends AuthorizingRealm {
         SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
 
         info.addRoles(roleNameList);
-        info.addStringPermissions(permissionNameList);
+       // info.addStringPermissions(permissionNameList);
 
 
         return info;

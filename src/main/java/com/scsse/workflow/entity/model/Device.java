@@ -26,10 +26,7 @@ public class Device implements Serializable {
     @Column(nullable = false)
     private String name;
     @Column(scale = 2)
-    private BigDecimal expense;
-
-    @Column(scale = 2)
-    private  BigDecimal income;
+    private Double expense;
 
     @OneToMany(mappedBy = "device")
     @JsonBackReference(value = "device.accounts")
@@ -37,7 +34,7 @@ public class Device implements Serializable {
 
     @Override
     public int hashCode(){
-        return Objects.hash(getId(),getExpense(),getIncome(),getName());
+        return Objects.hash(getId(),getExpense(),getName());
     }
 
     @Override
@@ -46,7 +43,6 @@ public class Device implements Serializable {
                 "id="+id+
                 ",name='"+name+'\''+
                 ",expense="+ expense +
-                ",income = "+income+
                 "}";
     }
 

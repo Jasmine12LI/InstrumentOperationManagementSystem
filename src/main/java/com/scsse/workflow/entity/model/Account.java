@@ -1,6 +1,7 @@
 package com.scsse.workflow.entity.model;
 
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,9 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Objects;
+import java.util.Set;
 
 @Data
 @ToString
@@ -28,19 +31,18 @@ public class Account implements Serializable {
 
     //负数表示支出， 证书表示受益
     @Column(scale = 2)
-    private BigDecimal price;
+    private Double price;
 
     @Column
-    private String des;
+    private String des; //审核意见
+
+    @Column
+    private String summary;
 
    //0 未审核 1 审核通过 2审核未通过
    @NotNull
     @Column(columnDefinition = "int default 0",nullable = false)
     private Integer status;
-
-    //true 为支出 false 为收益
-    @Column(nullable = false)
-    private Boolean isExpense;
 
 
     @ManyToOne
@@ -50,6 +52,7 @@ public class Account implements Serializable {
     @ManyToOne
     @JoinColumn(name = "checkUser_id")
     private User checkUser;
+
 
     @JsonFormat( pattern="yyyy-MM-dd HH:mm", timezone = "GMT+8")
     @Column(name = "submit_time")
@@ -62,6 +65,10 @@ public class Account implements Serializable {
     @ManyToOne
     @JoinColumn(name = "device_id")
     private  Device device;
+
+    @OneToMany(mappedBy = "account",fetch = FetchType.EAGER)
+    @JsonBackReference(value = "account.items")
+    private Set<Item> items = new HashSet<>();
 
     @Override
     public int hashCode(){

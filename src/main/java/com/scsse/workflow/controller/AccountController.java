@@ -1,9 +1,17 @@
 package com.scsse.workflow.controller;
 
+import com.itextpdf.text.Document;
+import com.itextpdf.text.DocumentException;
+import com.itextpdf.text.pdf.*;
 import com.scsse.workflow.entity.dto.UserDto;
 import com.scsse.workflow.entity.model.Account;
+import com.scsse.workflow.entity.model.Item;
 import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.repository.AccountRepository;
+import com.scsse.workflow.repository.DeviceRepository;
+import com.scsse.workflow.repository.ItemRepository;
 import com.scsse.workflow.service.AccountService;
+import com.scsse.workflow.service.ItemService;
 import com.scsse.workflow.service.UserService;
 import com.scsse.workflow.util.result.Result;
 import com.scsse.workflow.util.result.ResultCode;
@@ -13,26 +21,53 @@ import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.*;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 public class AccountController {
     private final AccountService accountService;
     private final UserService userService;
+    private final ItemService itemService;
+    private final AccountRepository accountRepository;
+    private final ItemRepository itemRepository;
+
     @Autowired
-    public AccountController(AccountService accountService,UserService userService){
+    public AccountController(AccountService accountService,UserService userService,
+                             ItemService itemService,AccountRepository accountRepository,
+                             ItemRepository itemRepository){
 
         this.accountService = accountService;
         this.userService = userService;
+        this.itemService = itemService;
+        this.accountRepository = accountRepository;
+        this.itemRepository = itemRepository;
+
     }
     @RequiresRoles("deviceManager")
     @PostMapping("/account")
     public Result createOneAccount(@RequestBody Account account){
+        System.out.println("正在添加账单");
+        account.setSubmitTime(new Date());
         User user = (User) SecurityUtils.getSubject().getPrincipal();
         account.setSubmitUser(user);
         account.setSubmitTime(new Date());
         account.setStatus(0);
-        return ResultUtil.success(accountService.createAccount(account));
+        Set<Item> newItems = new HashSet<Item>();
+        for(Item i : account.getItems()){
+             newItems.add(itemService.createItem(i));
+        }
+        Account newAccount = accountRepository.save(account);
+        for(Item i : newItems){
+            itemService.setAccount(i,account);
+        }
+        user.getAccounts().add(newAccount);
+        userService.updateUser(user);
+        return ResultUtil.success(accountService.updateAccount(newAccount));
     }
 
     @GetMapping("/account/{accountId}")
@@ -69,10 +104,10 @@ public class AccountController {
         return ResultUtil.success(accountService.findAccountByCheckUser(checkId));
     }
 
-    //通过提交人Id来查询其提交的订单
-    @GetMapping("/account/submitUser/{submitId}")
-    public Result findAccountBySubmitUser(@PathVariable Integer submitId){
-        return ResultUtil.success(accountService.findAccountBySubmit(submitId));
+    //通过提交人来查询其提交的订单
+    @GetMapping("/account/submitUser")
+    public Result findAccountBySubmitUser(@RequestParam Integer status){
+        return ResultUtil.success(accountService.findAccountBySubmit(status));
     }
 
     //根据账单状态来查询账单
@@ -84,23 +119,26 @@ public class AccountController {
     }
     //审核账单并通过
     @RequiresRoles("fundManager")
-    @PostMapping("/account/pass/{accountId}")
-    public Result checkAccountAndPass(@PathVariable Integer accountId){
-        return ResultUtil.success(accountService.checkAccountAndPass(accountId));
+    @PostMapping("/account/pass")
+    public Result checkAccountAndPass(@RequestParam Integer accountId,@RequestParam String des){
+        return ResultUtil.success(accountService.checkAccountAndPass(accountId,des));
     }
 
     //审核账单并且不通过
     @RequiresRoles("fundManager")
-    @PostMapping("/account/noPass/{accountId}")
-    public Result checkAccountAndNoPass(@PathVariable Integer accountId){
-        return ResultUtil.success(accountService.checkAccountAndNoPass(accountId));
+    @PostMapping("/account/noPass")
+    public Result checkAccountAndNoPass(@RequestParam Integer accountId,@RequestParam String des){
+        return ResultUtil.success(accountService.checkAccountAndNoPass(accountId,des));
     }
-    //分别查询支出账单和收益账单
 
-    @GetMapping("/account/isExpense")
-    public Result findAccountByStatus(@RequestParam(required = true) Boolean isExpense)
-    {
-        return ResultUtil.success(accountService.findAccountByIsExpense(isExpense));
+    @RequiresRoles("deviceManager")
+    @PostMapping("/account/pdf")
+
+    public Result printPdf(@RequestParam Integer accountId,HttpServletResponse response) throws IOException {
+        File file = accountService.pringFile(accountId);
+        return ResultUtil.success();
     }
+
+
 
 }

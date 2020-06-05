@@ -40,6 +40,33 @@ public class UserController {
         return ResultUtil.success(userService.updateUser(user));
     }
 
+
+    @PostMapping("/user/name")
+    public Result updateName(@RequestParam Integer userId,
+                             @RequestParam  String name){
+        return ResultUtil.success(userService.updateName(userId,name));
+
+    }
+    @PostMapping("/user/lock")
+    public Result updateLock(@RequestParam Integer userId ){
+        return ResultUtil.success(userService.updateLock(userId));
+
+    }
+
+    @PostMapping("/user/phone")
+    public Result updatePhone(@RequestParam Integer userId,
+                             @RequestParam  String phone){
+        return ResultUtil.success(userService.updatePhone(userId,phone));
+
+    }
+    @PostMapping("/user/password")
+    public Result updatePassword(@RequestParam Integer userId,
+                              @RequestParam  String password){
+        return ResultUtil.success(userService.updatePassword(userId,password));
+
+    }
+
+
     @RequiresRoles("admin")
     @DeleteMapping("/user/{userId}")
     public Result deleteUser(@PathVariable Integer userId)
@@ -60,7 +87,7 @@ public class UserController {
         Subject currentUser = SecurityUtils.getSubject();
         if(!currentUser.isAuthenticated()){
             UsernamePasswordToken token = new UsernamePasswordToken(username,password);
-            token.setRememberMe(true);
+            token.setRememberMe(false);
             try{
                 currentUser.login(token);
             } catch (UnknownAccountException uae){

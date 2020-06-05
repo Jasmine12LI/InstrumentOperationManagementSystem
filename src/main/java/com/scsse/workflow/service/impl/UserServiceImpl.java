@@ -1,11 +1,8 @@
 package com.scsse.workflow.service.impl;
 
 
-import com.scsse.workflow.entity.dto.AccountDto;
 import com.scsse.workflow.entity.dto.RoleDto;
 import com.scsse.workflow.entity.dto.UserDto;
-import com.scsse.workflow.entity.model.Access;
-import com.scsse.workflow.entity.model.Account;
 import com.scsse.workflow.entity.model.Role;
 import com.scsse.workflow.entity.model.User;
 import com.scsse.workflow.repository.AccountRepository;
@@ -57,7 +54,8 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserDto createUser(User user) {
-        return  dtoTransferHelper.transferToUserDto(userRepository.save(user));
+        user.setState(1);
+         return  dtoTransferHelper.transferToUserDto(userRepository.save(user));
     }
 
     @Override
@@ -97,17 +95,6 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Set<Access> findAccess(Integer userId) {
-         User user = userRepository.findOne(userId);
-         Set<Role> roles = findRole(userId);
-         Set<Access> accesses = new HashSet<>();
-         for(Role role :roles){
-             accesses.addAll(role.getAccess());
-         }
-        return accesses;
-    }
-
-    @Override
     public void addRole(Integer userId, Integer roleId) {
        Role role = roleRepository.findOne(roleId);
        User user = userRepository.findOne(userId);
@@ -132,6 +119,37 @@ public class UserServiceImpl implements UserService {
     public List<RoleDto> findAllRole() {
         return dtoTransferHelper.transferToListDto(roleRepository.findAll(),
                 eachItem -> dtoTransferHelper.transferToRoleDto((Role) eachItem));
+    }
+
+    @Override
+    public UserDto updateName(Integer id, String name) {
+         User user = userRepository.findOne(id);
+         user.setName(name);
+         return dtoTransferHelper.transferToUserDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto updatePhone(Integer id, String phone) {
+        User user = userRepository.findOne(id);
+        user.setPhone(phone);
+        return dtoTransferHelper.transferToUserDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto updatePassword(Integer id, String password) {
+        User user = userRepository.findOne(id);
+        user.setPassword(password);
+        return dtoTransferHelper.transferToUserDto(userRepository.save(user));
+    }
+
+    @Override
+    public UserDto updateLock(Integer id) {
+        User user = userRepository.findOne(id);
+        if(user.getState()==1)
+            user.setState(0);
+        else
+            user.setState(1);
+        return dtoTransferHelper.transferToUserDto(userRepository.save(user));
     }
 
 

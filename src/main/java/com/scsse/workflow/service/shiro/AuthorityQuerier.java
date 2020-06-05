@@ -1,7 +1,5 @@
 package com.scsse.workflow.service.shiro;
-import com.scsse.workflow.entity.model.Access;
 import com.scsse.workflow.entity.model.Role;
-import com.scsse.workflow.repository.AccessRepository;
 import com.scsse.workflow.repository.RoleRepository;
 import com.scsse.workflow.repository.UserRepository;
 import com.scsse.workflow.service.UserService;
@@ -26,8 +24,6 @@ public class AuthorityQuerier {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private AccessRepository accessRepository;
 
     public List<Role> getRoleListByUser_id(@NotNull Integer user_id) {
         List<Role> roleList = new ArrayList<>(userService.findRole(user_id));
@@ -48,22 +44,7 @@ public class AuthorityQuerier {
         return roleNameList;
     }
 
-    public List<Access> getPermissionListByUser_id(@NotNull Integer user_id){
-        List<Access> permissionList = new ArrayList<>(userService.findAccess(user_id));
 
-        return permissionList;
-    }
-
-
-    public List<String> getPermissionNameListByUser_id(@NotNull Integer user_id){
-        List<Access> permissionList = getPermissionListByUser_id(user_id);
-        List<String> permissionNameList = new ArrayList<>();
-        for(Access permission:permissionList){
-            String permissionName = permission.getUrl();
-            permissionNameList.add(permissionName);
-        }
-        return permissionNameList;
-    }
 
 }
 

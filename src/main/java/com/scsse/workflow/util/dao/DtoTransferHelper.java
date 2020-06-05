@@ -1,14 +1,8 @@
 package com.scsse.workflow.util.dao;
 
 
-import com.scsse.workflow.entity.dto.AccountDto;
-import com.scsse.workflow.entity.dto.DeviceDto;
-import com.scsse.workflow.entity.dto.RoleDto;
-import com.scsse.workflow.entity.dto.UserDto;
-import com.scsse.workflow.entity.model.Account;
-import com.scsse.workflow.entity.model.Device;
-import com.scsse.workflow.entity.model.Role;
-import com.scsse.workflow.entity.model.User;
+import com.scsse.workflow.entity.dto.*;
+import com.scsse.workflow.entity.model.*;
 import com.scsse.workflow.repository.AccountRepository;
 import com.scsse.workflow.repository.DeviceRepository;
 import com.scsse.workflow.repository.UserRepository;
@@ -105,22 +99,6 @@ public class DtoTransferHelper {
 
     public DeviceDto transferToDeviceDto(Device device){
         DeviceDto result = new DeviceDto();
-        Set<Account> accounts= device.getAccounts();
-        BigDecimal expense = new BigDecimal("0"),
-                   income = new BigDecimal("0"),
-                   com = new BigDecimal("0");
-        Iterator it = accounts.iterator();
-        while(it.hasNext())
-        {
-            Account a = (Account) it.next();
-            if(!a.getIsExpense()&& a.getStatus()==1)
-                income=income.add(a.getPrice());
-            else if(a.getIsExpense()&& a.getStatus()==1)
-                expense=expense.add(a.getPrice());
-        }
-        device.setExpense(expense);
-        device.setIncome(income);
-        deviceRepository.save(device);
         modelMapper.map(device,result);
         return result;
     }
@@ -129,6 +107,13 @@ public class DtoTransferHelper {
     {
         RoleDto result = new RoleDto();
         modelMapper.map(role,result);
+        return result;
+    }
+
+    public ItemDto transferToItemDto(Item item)
+    {
+        ItemDto  result = new ItemDto();
+        modelMapper.map(item,result);
         return result;
     }
 
